@@ -1,0 +1,63 @@
+<form action="/submit" method="POST">
+	{% if form.errors %}
+		<ul class="errors">
+			{% for field in form.errors %}
+				<li>{{ form[field].label }} - {{ form[field].errors }}</li>
+			{% endfor %}
+		</ul>
+	{% endif %}
+	<ul>
+		<li>
+			{{ form.date.label }}{{ form.date }}
+		</li>
+		<li>
+			{{ form.mediatype.label }}{{ form.mediatype }}
+			<fieldset id="radio-fields" class="disabled">
+				<ul>
+					<li>
+						{{ form.radio_callsign.label }}
+						{{ form.radio_callsign }}
+					</li>
+				</ul>
+			</fieldset>
+			<fieldset id="television-fields" class="disabled">
+				<ul>
+					<li>
+						{{ form.tv_provider.label }}
+						{{ form.tv_provider }}
+					</li>
+					<li>
+						{{ form.tv_channel.label }}
+						{{ form.tv_channel }}
+					</li>
+				</ul>
+			</fieldset>
+		</li>
+		<li>
+			{{ form.zipcode.label }}{{ form.zipcode }}
+		</li>
+		<li>
+			{{ form.candidate.label }}{{ form.candidate }}
+		</li>
+		<li>
+			{{ form.sponsor.label }}{{ form.sponsor }}
+		</li>
+		<li>
+			{{ form.description.label }}{{ form.description }}
+		</li>
+	</ul>
+	{{ form.referrer }}
+	<input type="submit" value="Submit">
+</form>
+
+<script>
+	var toggleMediaType = function() {
+		var mt = $('#mediatype').val();
+		$('fieldset').addClass('disabled');
+		if (mt) $('fieldset#' + mt + '-fields').removeClass('disabled');
+	};
+	$().ready(function() {
+		$('#mediatype').change(toggleMediaType);
+		toggleMediaType();
+	});
+</script>
