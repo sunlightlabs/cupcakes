@@ -1,0 +1,5 @@
+DEBUG = True
+SECRET_KEY = None
+
+MONGODB_HOST = None
+MONGODB_PORT = None

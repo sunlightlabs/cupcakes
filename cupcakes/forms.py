@@ -1,23 +1,9 @@
-from flask import Flask, render_template, request, session
 from wtforms import Form, validators, ValidationError
 from wtforms.fields import DateField, HiddenField, SelectField, TextField, TextAreaField
 from wtforms.widgets import TextInput
 import datetime
 
-#
-# form declaration
-#
-
 MEDIATYPES = [(c,c) for c in ('','radio','television')]
-CABLE_PROVIDERS = [
-    ('antenna', 'antenna'),
-    ('unknown', 'unknown'),
-    ('other', 'other'),
-    ('comcast', 'Comcast'),
-    ('cox', 'Cox'),
-    ('directv', 'DirecTV'),
-    ('rcn', 'RCN'),
-]
 
 # date widget
 
@@ -60,44 +46,10 @@ class SubmissionForm(Form):
     #time = TimeField(u'Time', validators=[validators.Required()])
     mediatype = SelectField(u'Media type', choices=MEDIATYPES, validators=[MediaTypeValidator()])
     radio_callsign = TextField(u'Radio station')
-    tv_provider = SelectField(u'Provider', choices=CABLE_PROVIDERS)
+    tv_provider = SelectField(u'Provider')
     tv_channel = TextField(u'Channel')
     zipcode = TextField(u'Zipcode', validators=[validators.Length(min=5, max=5)])
     candidate = TextField(u'Candidate mentioned')
     sponsor = TextField(u'Sponsor')
     description = TextAreaField(u'Description of ad')
     referrer = HiddenField()
-
-#
-# flask application
-#
-
-app = Flask(__name__)
-
-@app.route('/')
-def index():
-    form = SubmissionForm(request.form)
-    return render_template('index.html', form=form)
-
-@app.route('/submit', methods=['POST'])
-def submit():
-    
-    form = SubmissionForm(request.form)
-    
-    if not form.referrer.data:
-        form.referrer.data = request.referrer
-    
-    if form.validate():
-        session['referrer'] = form.referrer.data
-        return redirect(url_for('thanks'))
-        
-    return render_template('index.html', form=form)
-
-@app.route('/thanks', methods=['GET'])
-def thanks():
-    referrer = session.pop('referrer', None)
-    return render_template('thanks.html', referrer=referrer)
-    
-
-if __name__ == '__main__':
-    app.run(debug=True)
