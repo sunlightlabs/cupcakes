@@ -28,7 +28,6 @@ def after_request(response):
 
 @app.route('/')
 def index():
-    print geo.lookup(zip=20877)
     form = SubmissionForm(request.form)
     return render_template('index.html', form=form)
 
