@@ -8,7 +8,7 @@
 	{% endif %}
 	<ul>
 		<li>
-			{{ form.date.label }}{{ form.date }}
+			{{ form.zipcode.label }}{{ form.zipcode }}
 		</li>
 		<li>
 			{{ form.mediatype.label }}{{ form.mediatype }}
@@ -34,7 +34,13 @@
 			</fieldset>
 		</li>
 		<li>
-			{{ form.zipcode.label }}{{ form.zipcode }}
+			{{ form.date.label }}{{ form.date }}
+		</li>
+		<li>
+			{{ form.time.label }}{{ form.time }}
+		</li>
+		<li>
+			{{ form.for_against.label }}{{ form.for_against }}
 		</li>
 		<li>
 			{{ form.candidate.label }}{{ form.candidate }}

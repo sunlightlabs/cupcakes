@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<table>
+		<thead>
+			<tr>
+				<th>Zip Code</th>
+				<th>State</th>
+				<th>Date Aired</th>
+				<th>Aired On</th>
+				<th>Position</th>
+				<th>Candidate</th>
+				<th>Sponsor</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for s in submissions %}
+				<tr class="{{ s.mediatype }}">
+					
+					<td class="zipcode">{{ s.candidate }}</td>
+					<td class="state">{{ s.state }}</td>
+					<td class="date_aired">{{ s.date_aired }}</td>
+				
+					<td class="mediatype">
+						{% if s.mediatype == 'radio' %}
+							{{ s.radio_callsign }}
+						{% elif s.mediatype == 'television' %}
+							{{ s.tv_channel }} ({{ s.tv_provider }})
+						{% else %}
+							unknown
+						{% endif %}
+					</td>
+				
+					<td class="for_against">
+						{% if s.for_against == 'for' %}
+							In support of candidate
+						{% elif s.for_against == 'against' %}
+							Against candidate
+						{% else %}
+							unknown
+						{% endif %}
+					</td>
+				
+					<td class="candidate">{{ s.candidate }}</td>
+					<td class="sponsor">{{ s.sponsor }}</td>
+					<td class="description">{{ s.description }}</td>
+				
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+	
+	{% if pager.page_start < pager.page_end %}Results {{ pager.page_start }} - {% else %}Result {% endif %}
+	{{ pager.page_end }} of {{ pager.total }}
+	
+	{% if pager.has_previous %}
+		{% if pager.previous_page == 1 %}
+			<a href="/browse{% if qs %}?{{ qs }}{% endif %}">previous</a>
+		{% else %}
+			<a href="/browse?page={{ pager.previous_page }}{% if qs %}&amp;{{ qs }}{% endif %}">previous</a>
+		{% endif %}
+	{% endif %}
+	
+	{% if pager.has_next %}
+		<a href="/browse?page={{ pager.next_page }}{% if qs %}&amp;{{ qs }}{% endif %}">next</a>
+	{% endif %}
+	
+{% endblock %}
