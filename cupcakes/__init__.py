@@ -5,6 +5,7 @@ from flask import Flask, Response, g, render_template, redirect, request, sessio
 from pymongo import Connection
 import datetime
 import json
+import pytz
 import re
 import urllib
 
@@ -44,20 +45,29 @@ def submit():
         session['referrer'] = form.referrer.data
         
         submission = form.data.copy()
+        submission['timestamp'] = datetime.datetime.utcnow()
         
+        # location lookup
+        location = geo.lookup(zip=submission['zipcode'])
+        if location:
+            submission['city'] = location.get('city', None)
+            submission['state'] = location.get('statecode', None)
+            submission['latitude'] = location.get('latitude', None)
+            submission['longitude'] = location.get('longitude', None)
+            submission['timezone'] = location.get('timezone', None)
+        
+        # date conversion
         d = submission['date']
         (h, m) = (int(t) for t in submission['time'].split(":"))
         submission['date_aired'] = datetime.datetime(d.year, d.month, d.day, h, m)
         del submission['date']
         del submission['time']
-        
-        submission['timestamp'] = datetime.datetime.utcnow()
-        
-        location = geo.lookup(zip=submission['zipcode'])
-        if location:
-            submission['state'] = location.get('state', None)
-            submission['latitude'] = location.get('latitude', None)
-            submission['longitude'] = location.get('longitude', None)
+
+        # timezone conversion
+        if submission['timezone']:
+            tz = pytz.timezone(submission['timezone'])
+            tz_dt = tz.localize(submission['date_aired'])
+            submission['date_aired_utc'] = tz_dt.astimezone(pytz.utc)
         
         g.db.submissions.save(submission)
         
