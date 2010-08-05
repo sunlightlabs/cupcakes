@@ -30,7 +30,8 @@ def after_request(response):
 @app.route('/')
 def index():
     form = SubmissionForm(request.form)
-    return render_template('index.html', form=form)
+    recent = g.db.submissions.find().sort('-timestamp').limit(5)
+    return render_template('index.html', form=form, recent=recent)
 
 @app.route('/submit', methods=['POST'])
 def submit():

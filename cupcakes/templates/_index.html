@@ -1,0 +1,118 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+    <head>
+        <meta name="keywords" content="" />
+        <meta name="description" content="" />
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Sunlight Campaign Ad Monitor</title>
+        <link rel="stylesheet" href="main.css" type="text/css" media="screen" />
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+        <script type="text/javascript" src="js/dataCatalog.js"></script>
+
+    <!--[if IE 6]><link rel="stylesheet" href="buggy.css" type="text/css" media="screen" /><![endif]-->
+    <!--[if IE 7]><link rel="stylesheet" href="buggy7.css" type="text/css" media="screen" /><![endif]-->
+
+    </head>
+    <body class="home">
+        <div id="headerWrapper">
+            <div id="header">
+                <h1><a href="/"><small>Sunlight</small><big>Campaign Ad Monitor</big></a></h1>
+                <form id="searchForm" action="." method="get">
+                    <span class="tip">Search for ads, candidates or locations</span>
+                    <input id="id_search" type="text" name="search"/>
+                    <button class="searchBtn" type="submit">
+                        <span>Go</span>
+                    </button>
+                </form>
+                <div class="clear"></div>
+                <div id="feature">
+                    <p>Be a campaign monitor, report political ads you've seen recently</p>
+                </div>    
+            </div>
+            <div id="pageMain">
+                <div id="ltColumn">
+                    <h2 id="reportingTitle">Start Reporting</h2>
+                    <form id="reportAd" action="." method="get">
+                        <ul>
+                            <li>
+                                <label>Zip Code</label>
+                                <input id="id_zip" type="text" name="zip"/>
+                            </li>
+                            <li>
+                                <label>Source</label>
+                                <select id="id_sources" name="sources">
+                                    <option value="1">TV</option>
+                                    <option value="1">Radio</option>
+                                </select>
+                            </li>
+                            <li>
+                                <button class="continueBtn" type="submit">
+                                    <span>Continue</span>
+                                </button>
+                            </li>    
+                        </ul>
+                    </form>    
+                </div>
+                <div id="rtColumn">
+                    <h2 id="reportsTitle">Recent Reports</h2>
+                    <ul id="recentReports">
+                        <li>
+                            <h3><a href="#">Senator Mark Warner</a></h3>
+                            <span class="party">(D)</span>
+                            <span class="state">Virginia</span>
+                            <dl class="clear">
+                                <dt>Sponsored by:</dt>
+                                <dd>
+                                    <a href="#">Exxon</a>
+                                    <span class="for">For Candidate</span>
+                                </dd>
+                                
+                                <dt>Aired On:</dt>
+                                <dd>WAMU, Washington DC</dd>
+                            </dl>    
+                        </li>
+                        <li>
+                            <h3><a href="#">Senator Mark Warner</a></h3>
+                            <span class="party">(D)</span>
+                            <span class="state">Virginia</span>
+                            <dl class="clear">
+                                <dt>Sponsored by:</dt>
+                                <dd>
+                                    <a href="#">Exxon</a>
+                                    <span class="against">Against Candidate</span>
+                                </dd>
+                                
+                                <dt>Aired On:</dt>
+                                <dd>WAMU, Washington DC</dd>
+                            </dl>    
+                        </li>
+                        <li>
+                            <h3><a href="#">Senator Mark Warner</a></h3>
+                            <span class="party">(D)</span>
+                            <span class="state">Virginia</span>
+                            <dl class="clear">
+                                <dt>Sponsored by:</dt>
+                                <dd>
+                                    <a href="#">Exxon</a>
+                                    <span class="for">For Candidate</span>
+                                </dd>
+                                
+                                <dt>Aired On:</dt>
+                                <dd>WAMU, Washington DC</dd>
+                            </dl>    
+                        </li>  
+                    </ul>
+                    <a class="viewMore" href="#">View All Reports</a> 
+                </div>
+                <div class="clear"></div>
+                <div id="footer">
+                    <a id="sunlight" href="http://www.sunlightfoundation.com">Sunlight Foundation</a>
+                    <p>Founded in 2006, the Sunlight Foundation is a non-partisan non-profit that uses cutting-edge technology and ideas to make government transparent and accountable. Visit <a href="http://www.sunligtfoundation.com">SunlightFoundation.com</a> to learn more.</p>
+                </div>
+            </div>
+            
+             
+                  
+        </div>
+    </body>
+</html>                

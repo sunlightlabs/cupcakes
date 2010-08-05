@@ -1,4 +1,4 @@
-<form action="/submit" method="POST">
+<form id="reportAd" action="/submit" method="POST">
 	{% if form.errors %}
 		<ul class="errors">
 			{% for field in form.errors %}
@@ -7,53 +7,60 @@
 		</ul>
 	{% endif %}
 	<ul>
+		<fieldset class="initial">
+			<li>
+				{{ form.zipcode.label }}{{ form.zipcode }}
+			</li>
+			<li>
+				{{ form.mediatype.label }}{{ form.mediatype }}
+			</li>
+		</fieldset>
+		<fieldset class="final">
+			<li>
+				{{ form.radio_callsign.label }}
+				{{ form.radio_callsign }}
+			</li>
+			<li>
+				{{ form.tv_provider.label }}
+				{{ form.tv_provider }}
+			</li>
+			<li>
+				{{ form.tv_channel.label }}
+				{{ form.tv_channel }}
+			</li>
+			</li>
+			<li>
+				{{ form.date.label }}
+				{{ form.date }}
+			</li>
+			<li>
+				{{ form.time.label }}
+				{{ form.time }}
+			</li>
+			<li>
+				{{ form.for_against.label }}
+				{{ form.for_against }}
+			</li>
+			<li>
+				{{ form.candidate.label }}
+				{{ form.candidate }}
+			</li>
+			<li>
+				{{ form.sponsor.label }}
+				{{ form.sponsor }}
+			</li>
+			<li>
+				{{ form.description.label }}
+				{{ form.description }}
+			</li>	
+		</fieldset>
 		<li>
-			{{ form.zipcode.label }}{{ form.zipcode }}
-		</li>
-		<li>
-			{{ form.mediatype.label }}{{ form.mediatype }}
-			<fieldset id="radio-fields" class="disabled">
-				<ul>
-					<li>
-						{{ form.radio_callsign.label }}
-						{{ form.radio_callsign }}
-					</li>
-				</ul>
-			</fieldset>
-			<fieldset id="television-fields" class="disabled">
-				<ul>
-					<li>
-						{{ form.tv_provider.label }}
-						{{ form.tv_provider }}
-					</li>
-					<li>
-						{{ form.tv_channel.label }}
-						{{ form.tv_channel }}
-					</li>
-				</ul>
-			</fieldset>
-		</li>
-		<li>
-			{{ form.date.label }}{{ form.date }}
-		</li>
-		<li>
-			{{ form.time.label }}{{ form.time }}
-		</li>
-		<li>
-			{{ form.for_against.label }}{{ form.for_against }}
-		</li>
-		<li>
-			{{ form.candidate.label }}{{ form.candidate }}
-		</li>
-		<li>
-			{{ form.sponsor.label }}{{ form.sponsor }}
-		</li>
-		<li>
-			{{ form.description.label }}{{ form.description }}
+			<button class="continueBtn" type="submit">
+				<span>Continue</span>
+			</button>
 		</li>
 	</ul>
 	{{ form.referrer }}
-	<input type="submit" value="Submit">
 </form>
 
 <script>

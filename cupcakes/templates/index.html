@@ -1,5 +1,40 @@
 {% extends "base.html" %}
 
 {% block content %}
-	{% include "form.html" %}
+
+	<div id="ltColumn">
+		<h2 id="reportingTitle">Start Reporting</h2>
+		{% include "form.html" %}
+	</div>
+	<div id="rtColumn">
+		<h2 id="reportsTitle">Recent Reports</h2>
+		<ul id="recentReports">
+			{% for s in recent %}
+				<li>
+					<h3><a href="/browse?candidate={{ s.candidate }}">{{ s.candidate }}</a></h3>
+					<span class="state">{{ s.state }}</span>
+					<dl class="clear">
+						<dt>Sponsored by:</dt>
+						<dd>
+							<a href="/browse?sponsor={{ s.sponsor }}">{{ s.sponsor }}</a>
+							<span class="{{ s.for_against }}">{{ s.for_against|title }} Candidate</span>
+						</dd>
+
+						<dt>Aired On:</dt>
+						<dd>
+							{% if s.mediatype == 'radio' %}
+								{{ s.radio_callsign }}
+							{% elif s.mediatype == 'television' %}
+								{{ s.tv_channel }} ({{ s.tv_provider }})
+							{% else %}
+								unknown
+							{% endif %}
+						</dd>
+					</dl>
+				</li>
+			{% endfor %}
+		</ul>
+		<a class="viewMore" href="/browse">View All Reports</a>
+	</div>
+
 {% endblock %}
