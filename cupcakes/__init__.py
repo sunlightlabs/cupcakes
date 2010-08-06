@@ -1,15 +1,24 @@
 from cupcakes import settings
-from cupcakes.forms import SubmissionForm
+from cupcakes.forms import SubmissionForm, FilterForm
 from cupcakes.geo import YahooGeocoder
 from flask import Flask, Response, g, render_template, redirect, request, session, url_for
 from pymongo import Connection
 import datetime
 import json
+import math
 import pytz
 import re
 import urllib
 
 app = Flask(__name__)
+
+# jinja2 loading
+
+@app.template_filter('datetimeformat')
+def datetimeformat_filter(value, format='%b %d %I:%M %p'):
+    return value.strftime(format)
+    
+# geo stuff
 
 geo = YahooGeocoder(settings.YAHOO_APPID)
 
@@ -49,7 +58,7 @@ def submit():
         submission['timestamp'] = datetime.datetime.utcnow()
         
         # location lookup
-        location = geo.lookup(zip=submission['zipcode'])
+        location = geo.lookup(postal=submission['zipcode'])
         if location:
             submission['city'] = location.get('city', None)
             submission['state'] = location.get('statecode', None)
@@ -83,23 +92,49 @@ def thanks():
 
 @app.route('/browse', methods=['GET'])
 def browse():
+
+    form = FilterForm(request.args)
     
     page = int(request.args.get('page', 1))
     limit = settings.PAGE_SIZE
     offset = limit * (page - 1)
     
     spec = {}
-    if 'state' in request.args:
-        spec['state'] = request.args['state'].upper()    
-    if 'zipcode' in request.args:
-        spec['zipcode'] = request.args['zipcode'].upper()
-    if 'candidate' in request.args:
+    qdesc_phrases = []
+        
+    if 'candidate' in request.args and request.args['candidate']:
         spec['candidate'] = re.compile(request.args['candidate'], re.I)
-    if 'sponsor' in request.args:
+        qdesc_phrases.append('about &#8220;%s&#8221;' % request.args['candidate'])
+        
+    if 'sponsor' in request.args and request.args['sponsor']:
         spec['sponsor'] = re.compile(request.args['sponsor'], re.I)
+        qdesc_phrases.append('sponsored by &#8220;%s&#8221;' % request.args['sponsor'])
+    
+    if 'state' in request.args and request.args['state']:
+        spec['state'] = request.args['state'].upper()
+        qdesc_phrases.append('aired in %s' % request.args['state'])
+        
+    if 'zipcode' in request.args and request.args['zipcode']:
+        spec['zipcode'] = request.args['zipcode'].upper()
+        if 'state' in request.args and request.args['state']:
+            qdesc_phrases.append('(%s)' % request.args['zipcode'])
+        else:
+            qdesc_phrases.append('aired in %s' % request.args['zipcode'])
+
+    params = request.args.copy()
+    if 'page' in params:
+        del params['page']
     
     submissions = g.db.submissions.find(spec).sort('-timestamp').skip(offset).limit(limit)
     total = g.db.submissions.find(spec).count()
+    last_page = int(math.ceil(float(total) / float(limit)))
+    
+    if page > last_page:
+        if last_page > 1:
+            params['page'] = last_page
+            return redirect('/browse?%s' % urllib.urlencode(params))
+        else:
+            return redirect('/browse')
     
     pager = {
         'has_previous': offset > 0,
@@ -114,13 +149,11 @@ def browse():
         'total': total,
     }
     
-    params = request.args.copy()
-    if 'page' in params:
-        del params['page']
-    
     return render_template('browse.html',
+                           form=form,
                            submissions=submissions,
                            pager=pager,
+                           qdesc=' '.join(qdesc_phrases),
                            qs=urllib.urlencode(params))
     
 @app.route('/submissions.json', methods=['GET'])

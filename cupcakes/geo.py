@@ -1,4 +1,3 @@
-from lxml import etree
 import json
 import urllib
 import urllib2
@@ -17,25 +16,19 @@ class YahooGeocoder(object):
                 raise ValueError('%s is not a valid lookup parameter' % key)
                 
         params['appid'] = self.appid
-        # where API
         params['flags'] = 'JT'
         
         qs = urllib.urlencode(params)
         url = "http://where.yahooapis.com/geocode?%s" % qs
-        #url = "http://local.yahooapis.com/MapsService/V1/geocode?%s" % qs
         
         js = json.load(urllib2.urlopen(url))
-        loc = js['ResultSet']['Results'][0]
-        loc['latitude'] = float(loc['latitude'])
-        loc['longitude'] = float(loc['longitude'])
         
-        return loc
-                
-        # tree = etree.parse(urllib2.urlopen(url))
-        # root = tree.getroot()
-        # 
-        # loc = dict((c.tag.split('}')[1].lower(), c.text) for c in root[0])
-        # loc['latitude'] = float(loc['latitude'])
-        # loc['longitude'] = float(loc['longitude'])
-        # 
-        # return loc
+        rs = js['ResultSet']
+        
+        if 'Results' in rs:
+            
+            loc = rs['Results'][0]
+            loc['latitude'] = float(loc['latitude'])
+            loc['longitude'] = float(loc['longitude'])
+        
+            return loc

@@ -1,114 +1,127 @@
 {% extends "base.html" %}
 
+{% block bodyclass %}about{% endblock %}
+
 {% block content %}
-<div id="fullColumn">
-	<h2>Search Results for: <span id="searchResult">&#8220;Kentucky&#8221;</span></h2>
-	<div id="filter">
-		<span id="filterInstructions">Not seeing the results you’re after, revise your search below</span>
-		<form action="." method="get">
-			<ul>
-				<li>
-					<label>Zip Code</label>
-					<input id="id_zip" type="text" name="zip"/>
-				</li>
-				<li>
-					<label>State</label>
-					<select id="id_state" name="state">
-						<option value="1">Kentucky</option>
-						<option value="1">Michigan</option>
-					</select>
-				</li>
-				<li>
-					<label>Candidate</label>
-					<input id="id_candidate" type="text" name="candidate"/>
-				</li>
-				<li>
-					<label>Sponsor</label>
-					<input id="id_sponsor" type="text" name="sponsor"/>
-				</li>
-				<li>
-					<button class="filterBtn" type="submit">
-						<span>Filter</span>
-					</button>
-				</li>
-			</ul>
-		</form>
-		<div class="clear"></div>
-	</div>
-	<table>
-		<thead>
-			<tr id="titles">
-				<th class="sort">Zip</th>
-				<th class="sort">State</th>
-				<th class="sort" id="dateAired">Date Aired</th>
-				<th class="sort">Station</th>
-				<th class="sort">Support</th>
-				<th class="sort">Candidate</th>
-				<th class="sort">Sponsor</th>
-				<th>Description</th>
-			</tr>
-		</thead>
-		<tbody>
-			{% for s in submissions %}
-				<tr class="{{ loop.cycle('even', 'odd') }} {{ s.mediatype }}">
-					<td class="zipcode">{{ s.zipcode }}</td>
-					<td class="state">{{ s.state }}</td>
-					<td class="date_aired">{{ s.date_aired }}</td>
-					<td class="mediatype">
-						{% if s.mediatype == 'radio' %}
-							{{ s.radio_callsign }}
-						{% elif s.mediatype == 'television' %}
-							{{ s.tv_channel }} ({{ s.tv_provider }})
-						{% else %}
-							unknown
-						{% endif %}
-					</td>
-					<td class="for_against {{ s.for_against }}" title="{{ s.for_against }} candidate">
-						{% if s.for_against == 'for' %}
-							In support of candidate
-						{% elif s.for_against == 'against' %}
-							Against candidate
-						{% else %}
-							unknown
-						{% endif %}
-					</td>
-					<td class="candidate">{{ s.candidate }}</td>
-					<td class="sponsor">{{ s.sponsor }}</td>
-					<td class="description">{{ s.description }}</td>
-				</tr>
-			{% endfor %}
-		<tbody>
-	</table>
-
-	{% if pager.page_start < pager.page_end %}Results {{ pager.page_start }} - {% else %}Result {% endif %}
-	{{ pager.page_end }} of {{ pager.total }}
-				
-	<div id="tableNav">
-
-		{% if pager.has_previous %}
-			{% if pager.previous_page == 1 %}
-				<a id="previous" href="/browse{% if qs %}?{{ qs }}{% endif %}">« Previous</a>
-			{% else %}
-				<a id="previous" href="/browse?page={{ pager.previous_page }}{% if qs %}&amp;{{ qs }}{% endif %}">« Previous</a>
-			{% endif %}
-		{% endif %}
-
-		<div id="pagination">
-			<span id="current">1</span>
-			<a href="#">2</a>
-			<a href="#">3</a>
-			<a href="#">4</a>
-			<a href="#">5</a>
-			<a href="#">6</a>
-		</div>
-
-		{% if pager.has_next %}
-			<div id="nextWrapper">
-				<a id="next" href="/browse?page={{ pager.next_page }}{% if qs %}&amp;{{ qs }}{% endif %}">Next »</a>
-			</div>
+	<div id="fullColumn">
+		
+		{% if qdesc %}
+			<h2>Find ads <span id="searchResult">{{ qdesc|safe }}</span></h2>
+		{% else %}
+			<h2>Browse submissions</h2>
 		{% endif %}
 		
-	</div>
-</div>
+		<div id="filter">
+			<span id="filterInstructions">Not seeing the results you’re after, revise your search below</span>
+			<form action="/browse" method="get">
+				<ul>
+					{% for field in form %}
+						<li>
+							{{ field.label }}
+							{{ field }}
+						</li>
+					{% endfor %}
+					<li>
+						<button class="filterBtn" type="submit">
+							<span>Filter</span>
+						</button>
+					</li>
+				</ul>
+			</form>
+			<div class="clear"></div>
+			<a href="/browse#filter">clear filters</a>
+		</div>
+	
+		{% if pager.total == 0 %}
+			<p>Sorry, no submissions match your filter criteria.</p>
+		{% else %}
+	
+			<table id="resultsTable">
+				<thead>
+					<tr id="titles">
+						<th class="sort">Zip</th>
+						<th class="sort">State</th>
+						<th class="sort" id="dateAired">Date Aired</th>
+						<th class="sort">Aired On</th>
+						<th class="sort">Support</th>
+						<th class="sort">Candidate</th>
+						<th class="sort">Sponsor</th>
+						<th>Description</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for s in submissions %}
+						<tr class="{{ loop.cycle('even', 'odd') }} {{ s.mediatype }}">
+							<td class="zipcode">{{ s.zipcode }}</td>
+							<td class="state">{{ s.state }}</td>
+							<td class="date_aired" title="{{ s.date_aired }}">{{ s.date_aired|datetimeformat }}</td>
+							<td class="mediatype">
+								{% if s.mediatype == 'radio' %}
+									{{ s.radio_callsign }}
+								{% elif s.mediatype == 'television' %}
+									{{ s.tv_channel }} ({{ s.tv_provider }})
+								{% else %}
+									unknown
+								{% endif %}
+							</td>
+							<td class="for_against {{ s.for_against }}" title="{{ s.for_against }} candidate">
+								{{ s.for_against }}
+							</td>
+							<td class="candidate">{{ s.candidate }}</td>
+							<td class="sponsor">{{ s.sponsor }}</td>
+							<td class="description">{{ s.description }}</td>
+						</tr>
+					{% endfor %}
+				<tbody>
+			</table>
 
+			<div id="tableNav">
+
+				{% if pager.has_previous %}
+					{% if pager.previous_page == 1 %}
+						<a id="previous" href="/browse{% if qs %}?{{ qs }}{% endif %}">« Previous</a>
+					{% else %}
+						<a id="previous" href="/browse?page={{ pager.previous_page }}{% if qs %}&amp;{{ qs }}{% endif %}">« Previous</a>
+					{% endif %}
+				{% endif %}
+
+				<div id="pagination">
+					<!--
+					<span id="current">1</span>
+					<a href="#">2</a>
+					<a href="#">3</a>
+					<a href="#">4</a>
+					<a href="#">5</a>
+					<a href="#">6</a>
+					-->
+					{% if pager.page_start < pager.page_end %}Results {{ pager.page_start }} - {% else %}Result {% endif %}
+					{{ pager.page_end }} of {{ pager.total }}
+				</div>
+
+				{% if pager.has_next %}
+					<div id="nextWrapper">
+						<a id="next" href="/browse?page={{ pager.next_page }}{% if qs %}&amp;{{ qs }}{% endif %}">Next »</a>
+					</div>
+				{% endif %}
+		
+			</div>
+	
+		{% endif %}
+	
+	</div>
+
+{% endblock %}
+
+{% block scripts %}
+	<script type="text/javascript">
+		$().ready(function() { 
+			$("#resultsTable").tablesorter({
+				headers: { 7: { sorter: false } },
+				textExtraction: function(node) {
+					var title = $(node).attr('title');
+					return title ? title : node.innerHTML;
+				}
+			}); 
+		});
+	</script>
 {% endblock %}

@@ -48,11 +48,11 @@ h2 { margin-bottom: 30px; text-transform: uppercase; color: #1b0500; font-size: 
 h2#reportingTitle { text-indent: -9999em; display: block; width: 234px; height: 20px; background: url(../images/text_reporting.png) top left no-repeat;}
 h2#reportsTitle { text-indent: -9999em; display: block; width: 221px; height: 20px; background: url(../images/text_recent.png) top left no-repeat;}
 
-#searchResult { text-transform: capitalize; font-weight: normal;}
+#searchResult { text-transform: none; font-weight: normal;}
 
 h3 { font-size: 140%; float: left; margin-right: 10px; margin-bottom: 10px;}
 span.party { float: left; margin-right: 5px;}
-span.party, span.state { color: #757272; }
+span.party, span.searchResult { color: #757272; }
 span.for, span.against {padding-left: 25px; text-transform: lowercase; font-style: oblique; margin-left: 15px;}
 span.for { background: url(../images/icon_for.png) left top no-repeat; color: #6b912e; padding-top:3px;}
 span.against { background: url(../images/icon_against.png) top left no-repeat; color: #c5390b; padding-top:3px;}
@@ -77,7 +77,7 @@ div#filter label { display: block; float: none; margin-bottom: 5px;}
 div#filter li { float: left; margin-right: 30px;}
 
 div#filter select { width: 200px; height: 28px; padding: 3px 0;}
-input#id_zip { width: 80px;}
+input#zipcode { width: 80px;}
 
 button { text-indent: -9999em; display: block; cursor: pointer; border: none;}
 button.searchBtn { width: 45px; height: 31px; background: url(../images/button_go.png) top left no-repeat; float: left;}
@@ -87,7 +87,7 @@ button.searchBtn { width: 45px; height: 31px; background: url(../images/button_g
 table { width: 940px; }
 tr#titles th { text-transform: uppercase; color: #1b0500; font-weight: bold; padding: 0 15px 15px; font-size: 105%;}
 th.sort { background: url(../images/sortArrows.png) left 4px no-repeat; padding-left: 15px;}
-th#dateAired { width: 90px;}
+th#dateAired { width: 95px;}
 .even { background-color: #f7f5f0;}
 td { padding: 15px; }
 tbody { font-size: 95%; line-height: 16px;}

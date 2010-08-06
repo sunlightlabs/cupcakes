@@ -6,7 +6,7 @@ MONGODB_PORT = None
 
 YAHOO_APPID = ''
 
-PAGE_SIZE = 3
+PAGE_SIZE = 30
 
 try:
     from local_settings import *

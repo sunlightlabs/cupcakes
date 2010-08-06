@@ -5,6 +5,61 @@ from wtforms.fields import DateField, HiddenField, SelectField, TextField, TextA
 from wtforms.widgets import TextInput
 import datetime
 
+US_STATES = (
+    ("", ""),
+    ("AL", "Alabama"),
+    ("AK", "Alaska"),
+    ("AZ", "Arizona"),
+    ("AR", "Arkansas"),
+    ("CA", "California"),
+    ("CO", "Colorado"),
+    ("CT", "Connecticut"),
+    ("DE", "Delaware"),
+    ("DC", "Dist of Columbia"),
+    ("FL", "Florida"),
+    ("GA", "Georgia"),
+    ("HI", "Hawaii"),
+    ("ID", "Idaho"),
+    ("IL", "Illinois"),
+    ("IN", "Indiana"),
+    ("IA", "Iowa"),
+    ("KS", "Kansas"),
+    ("KY", "Kentucky"),
+    ("LA", "Louisiana"),
+    ("ME", "Maine"),
+    ("MD", "Maryland"),
+    ("MA", "Massachusetts"),
+    ("MI", "Michigan"),
+    ("MN", "Minnesota"),
+    ("MS", "Mississippi"),
+    ("MO", "Missouri"),
+    ("MT", "Montana"),
+    ("NE", "Nebraska"),
+    ("NV", "Nevada"),
+    ("NH", "New Hampshire"),
+    ("NJ", "New Jersey"),
+    ("NM", "New Mexico"),
+    ("NY", "New York"),
+    ("NC", "North Carolina"),
+    ("ND", "North Dakota"),
+    ("OH", "Ohio"),
+    ("OK", "Oklahoma"),
+    ("OR", "Oregon"),
+    ("PA", "Pennsylvania"),
+    ("RI", "Rhode Island"),
+    ("SC", "South Carolina"),
+    ("SD", "South Dakota"),
+    ("TN", "Tennessee"),
+    ("TX", "Texas"),
+    ("UT", "Utah"),
+    ("VT", "Vermont"),
+    ("VA", "Virginia"),
+    ("WA", "Washington"),
+    ("WV", "West Virginia"),
+    ("WI", "Wisconsin"),
+    ("WY", "Wyoming"),
+)
+
 TIMES = []
 current = datetime.datetime(1981, 8, 6, 0, 0, 0)
 xv_minutes = datetime.timedelta(0, 0, 0, 0, 15)
@@ -64,3 +119,9 @@ class SubmissionForm(Form):
     sponsor = TextField(u'Sponsor')
     description = TextAreaField(u'Description of ad')
     referrer = HiddenField()
+
+class FilterForm(Form):
+    zipcode = TextField(u'Zipcode', validators=[validators.Length(min=5, max=5)])
+    state = SelectField(u'State', choices=US_STATES)
+    candidate = TextField(u'Candidate')
+    sponsor = TextField(u'Sponsor')

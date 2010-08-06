@@ -6,9 +6,8 @@
 		<meta name="description" content="" />
 		<title>Sunlight Campaign Ad Monitor</title>
 		<link rel="stylesheet" href="/static/styles/main.css" type="text/css" media="screen" />
-		<script src="/static/scripts/jquery-1.4.2.min.js"></script>
 	</head>
-	<body class="home">
+	<body class="{% block bodyclass %}home{% endblock %}">
 		<div id="headerWrapper">
 			<div id="header">
 				<h1><a href="/"><small>Sunlight</small><big>Campaign Ad Monitor</big></a></h1>
@@ -20,9 +19,7 @@
 					</button>
 				</form>
 				<div class="clear"></div>
-				<div id="feature">
-					<p>Be a campaign monitor, report political ads you've seen recently</p>
-				</div>	  
+				{% block feature %}{% endblock %}
 			</div>
 			<div id="pageMain">
 				{% block content %}{% endblock %}
@@ -33,5 +30,8 @@
 				</div>
 			</div>
 		</div>
+		<script src="/static/scripts/jquery-1.4.2.min.js"></script>
+		<script src="/static/scripts/jquery.tablesorter.min.js"></script>
+		{% block scripts %}{% endblock %}
 	</body>
 </html>
