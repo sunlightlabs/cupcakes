@@ -64,6 +64,7 @@ form#reportAd select { width: 200px;}
 div#ltColumn label { text-transform: uppercase; font-size: 135%; width: 150px; display: block; float: left;}
 
 ul#recentReports li{ background: url(../images/icon_circles.png) top left no-repeat; padding-left: 30px; padding-bottom: 25px; margin-bottom: 25px; border-bottom: 1px dashed #9A9696;}
+ul#recentReports h3 { display: inline; float: none; }
 
 dt { float: left; margin-right: 7px; font-family: Georgia, "Times New Roman", Times, serif; font-style: oblique;}
 dd { color: #9a9696;}

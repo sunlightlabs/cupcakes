@@ -39,7 +39,7 @@ def after_request(response):
 @app.route('/')
 def index():
     form = SubmissionForm(request.form)
-    recent = g.db.submissions.find().sort('-timestamp').limit(5)
+    recent = g.db.submissions.find().sort('-timestamp').limit(3)
     return render_template('index.html', form=form, recent=recent)
 
 @app.route('/submit', methods=['POST'])
@@ -50,40 +50,50 @@ def submit():
     if not form.referrer.data:
         form.referrer.data = request.referrer
     
-    if form.validate():
+    if not form.validate():
+        recent = g.db.submissions.find().sort('-timestamp').limit(3)    
+        return render_template('index.html', form=form, recent=recent)
         
-        session['referrer'] = form.referrer.data
-        
-        submission = form.data.copy()
-        submission['timestamp'] = datetime.datetime.utcnow()
-        
-        # location lookup
+    session['referrer'] = form.referrer.data
+    
+    submission = form.data.copy()
+    submission['timestamp'] = datetime.datetime.utcnow()
+    
+    # location lookup
+    lookup = g.db.geo.find_one({'zipcode': submission['zipcode']})
+    if lookup:
+        location = lookup['geo']
+    else:
         location = geo.lookup(postal=submission['zipcode'])
         if location:
-            submission['city'] = location.get('city', None)
-            submission['state'] = location.get('statecode', None)
-            submission['latitude'] = location.get('latitude', None)
-            submission['longitude'] = location.get('longitude', None)
-            submission['timezone'] = location.get('timezone', None)
+            g.db.geo.save({
+                'zipcode': submission['zipcode'],
+                'geo': location,
+            })
         
-        # date conversion
-        d = submission['date']
-        (h, m) = (int(t) for t in submission['time'].split(":"))
-        submission['date_aired'] = datetime.datetime(d.year, d.month, d.day, h, m)
-        del submission['date']
-        del submission['time']
+    if location:
+        submission['city'] = location.get('city', None)
+        submission['state'] = location.get('statecode', None)
+        submission['latitude'] = location.get('latitude', None)
+        submission['longitude'] = location.get('longitude', None)
+        submission['timezone'] = location.get('timezone', None)
+    
+    # date conversion
+    d = submission['date']
+    (h, m) = (int(t) for t in submission['time'].split(":"))
+    submission['date_aired'] = datetime.datetime(d.year, d.month, d.day, h, m)
+    del submission['date']
+    del submission['time']
 
-        # timezone conversion
-        if submission['timezone']:
-            tz = pytz.timezone(submission['timezone'])
-            tz_dt = tz.localize(submission['date_aired'])
-            submission['date_aired_utc'] = tz_dt.astimezone(pytz.utc)
-        
-        g.db.submissions.save(submission)
-        
-        return redirect(url_for('thanks'))
-        
-    return render_template('index.html', form=form)
+    # timezone conversion
+    if submission['timezone']:
+        tz = pytz.timezone(submission['timezone'])
+        tz_dt = tz.localize(submission['date_aired'])
+        submission['date_aired_utc'] = tz_dt.astimezone(pytz.utc)
+    
+    g.db.submissions.save(submission)
+    
+    return redirect(url_for('thanks'))
 
 @app.route('/thanks', methods=['GET'])
 def thanks():
@@ -129,7 +139,7 @@ def browse():
     total = g.db.submissions.find(spec).count()
     last_page = int(math.ceil(float(total) / float(limit)))
     
-    if page > last_page:
+    if page > last_page and last_page > 0:
         if last_page > 1:
             params['page'] = last_page
             return redirect('/browse?%s' % urllib.urlencode(params))
@@ -158,6 +168,8 @@ def browse():
     
 @app.route('/submissions.json', methods=['GET'])
 def download():
+    headers = ('id','mediatype','for_against','radio_callsign','tv_provider','tv_channel',
+               'zipcode','candidate','sponsor','description','date_aired','city','state')
     def gen():
         for d in g.db.submissions.find():
             yield {
