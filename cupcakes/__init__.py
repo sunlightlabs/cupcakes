@@ -114,6 +114,7 @@ def submit():
 @app.route('/thanks', methods=['GET'])
 def thanks():
     params = {}
+    params['form'] = SubmissionForm(request.form)
     referrer = session.pop('referrer', None)
     # if referrer:
     # u = urlparse(referrer)

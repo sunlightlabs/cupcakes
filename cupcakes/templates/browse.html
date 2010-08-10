@@ -6,13 +6,13 @@
 	<div id="fullColumn">
 		
 		{% if qdesc %}
-			<h2>Find ads <span id="searchResult">{{ qdesc|safe }}</span></h2>
+			<h2 class="withAsset">Find ads <span id="searchResult">{{ qdesc|safe }}</span></h2>
 		{% else %}
-			<h2>Browse submissions</h2>
+			<h2 class="withAsset">Browse submissions</h2>
 		{% endif %}
 		
-		<a href="/download">Download all as CSV</a>
-		
+		<a id="downloadLink" href="/download">Download all as CSV</a>
+		<div class="clear"></div>
 		<div id="filter">
 			<span id="filterInstructions">Not seeing the results you’re after, revise your search below</span>
 			<form action="/browse" method="get">
@@ -31,7 +31,7 @@
 				</ul>
 			</form>
 			<div class="clear"></div>
-			<a href="/browse#filter">clear filters</a>
+			<a id="clearFilters" href="/browse#filter">clear filters</a>
 		</div>
 	
 		{% if pager.total == 0 %}

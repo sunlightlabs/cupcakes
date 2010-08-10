@@ -3,8 +3,16 @@
 {% block bodyclass %}about{% endblock %}
 
 {% block content %}
-
-	Return to <a href="#">{{ referrer }}</a>, <a href="#">browse submissions</a>, or <a href="#">submit another ad</a>.
-
+<div id="ltColumn">
+	<div id="options">
+	    <p><strong>Thanks for your submission!</strong></p>
+	    
+	    <p>Return to <a href="#">{{ referrer }}</a>, <a href="#">browse submissions</a>, or submit another ad.</p>
+	</div>
+</div>
+<div id="rtColumn">
+    <h2>Report Another Ad</h2>
+	{% include "form.html" %}
+</div>    
 	
 {% endblock %}
