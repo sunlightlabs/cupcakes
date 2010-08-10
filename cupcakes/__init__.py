@@ -4,6 +4,7 @@ from cupcakes.forms import SubmissionForm, FilterForm
 from cupcakes.geo import YahooGeocoder
 from flask import Flask, Response, g, render_template, redirect, request, session, url_for
 from pymongo import Connection, DESCENDING
+from urlparse import urlparse
 import csv
 import datetime
 import json
@@ -113,8 +114,11 @@ def submit():
 
 @app.route('/thanks', methods=['GET'])
 def thanks():
+    params = {}
     referrer = session.pop('referrer', None)
-    return render_template('thanks.html', referrer=referrer)
+    # if referrer:
+    # u = urlparse(referrer)
+    return render_template('thanks.html', **params)
 
 @app.route('/browse', methods=['GET'])
 def browse():
