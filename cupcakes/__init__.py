@@ -7,7 +7,6 @@ from pymongo import Connection, DESCENDING
 from urlparse import urlparse
 import csv
 import datetime
-import json
 import math
 import pytz
 import re
