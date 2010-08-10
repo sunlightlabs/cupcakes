@@ -1,6 +1,6 @@
 from cStringIO import StringIO
 from cupcakes import settings
-from cupcakes.forms import SubmissionForm, FilterForm
+from cupcakes.forms import SubmissionForm, FilterForm, US_STATES
 from cupcakes.geo import YahooGeocoder
 from flask import Flask, Response, g, render_template, redirect, request, session, url_for
 from pymongo import Connection, DESCENDING
@@ -39,6 +39,8 @@ def after_request(response):
 # application
 
 RECENT_SORT = [('timestamp',DESCENDING), ('date_aired', DESCENDING)]
+US_STATE_CODES = [s[0] for s in US_STATES]
+US_STATE_NAMES = [s[1].upper() for s in US_STATES]
 
 @app.route('/')
 def index():
@@ -116,8 +118,10 @@ def thanks():
     params = {}
     params['form'] = SubmissionForm(request.form)
     referrer = session.pop('referrer', None)
-    # if referrer:
-    # u = urlparse(referrer)
+    if referrer and referrer != settings.DOMAIN:
+        u = urlparse(referrer)
+        params['referrer'] = referrer
+        params['referrer_domain'] = u.netloc
     return render_template('thanks.html', **params)
 
 @app.route('/browse', methods=['GET'])
@@ -144,25 +148,37 @@ def browse():
     
     spec = {}
     qdesc_phrases = []
-
-    if 'candidate' in request.args and request.args['candidate']:
-        spec['candidate'] = re.compile(request.args['candidate'], re.I)
-        qdesc_phrases.append('about &#8220;%s&#8221;' % request.args['candidate'])
-        
-    if 'sponsor' in request.args and request.args['sponsor']:
-        spec['sponsor'] = re.compile(request.args['sponsor'], re.I)
-        qdesc_phrases.append('sponsored by &#8220;%s&#8221;' % request.args['sponsor'])
     
-    if 'state' in request.args and request.args['state']:
-        spec['state'] = request.args['state'].upper()
-        qdesc_phrases.append('aired in %s' % request.args['state'])
+    if 'q' in request.args and request.args['q']:
+    
+        regex = re.compile(request.args['q'], re.I)
+    
+        spec['$or'] = [
+            {'candidate': regex},
+            {'sponsor': regex},
+        ]
+        qdesc_phrases.append('related to &#8220;%s&#8221;' % request.args['q'])
         
-    if 'zipcode' in request.args and request.args['zipcode']:
-        spec['zipcode'] = request.args['zipcode'].upper()
+    else:
+
+        if 'candidate' in request.args and request.args['candidate']:
+            spec['candidate'] = re.compile(request.args['candidate'], re.I)
+            qdesc_phrases.append('about &#8220;%s&#8221;' % request.args['candidate'])
+        
+        if 'sponsor' in request.args and request.args['sponsor']:
+            spec['sponsor'] = re.compile(request.args['sponsor'], re.I)
+            qdesc_phrases.append('sponsored by &#8220;%s&#8221;' % request.args['sponsor'])
+    
         if 'state' in request.args and request.args['state']:
-            qdesc_phrases.append('(%s)' % request.args['zipcode'])
-        else:
-            qdesc_phrases.append('aired in %s' % request.args['zipcode'])
+            spec['state'] = request.args['state'].upper()
+            qdesc_phrases.append('aired in %s' % request.args['state'])
+        
+        if 'zipcode' in request.args and request.args['zipcode']:
+            spec['zipcode'] = request.args['zipcode'].upper()
+            if 'state' in request.args and request.args['state']:
+                qdesc_phrases.append('(%s)' % request.args['zipcode'])
+            else:
+                qdesc_phrases.append('aired in %s' % request.args['zipcode'])
 
     # copy params for returning as querystring
     params = request.args.copy()
@@ -203,7 +219,32 @@ def browse():
                            pager=pager,
                            qdesc=' '.join(qdesc_phrases),
                            qs=urllib.urlencode(params))
+
+@app.route('/search', methods=['POST'])
+def search():
     
+    q = request.form.get('q', '').strip()
+    
+    if not q:
+        return redirect(url_for('index'))
+    
+    params = {}
+    qu = q.upper()
+    
+    if re.match(r'\d{5}', q):
+        params['zipcode'] = q
+    
+    elif qu in US_STATE_CODES:
+        params['state'] = qu
+    
+    elif qu in US_STATE_NAMES:
+        params['state'] = US_STATE_CODES[US_STATE_NAMES.index(qu)]
+    
+    else:
+        params['q'] = q
+    
+    return redirect('/browse?%s' % urllib.urlencode(params))
+
 @app.route('/download', methods=['GET'])
 def download():
     """ Download all submissions as CSV.
