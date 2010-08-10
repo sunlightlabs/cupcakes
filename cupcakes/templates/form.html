@@ -9,30 +9,39 @@
 	<fieldset class="initial">
 		<ul>
 			<li>
-				{{ form.zipcode.label }}{{ form.zipcode }}
+				{{ form.zipcode.label }}{{ form.zipcode(maxlength="5") }}
 			</li>
 			<li>
 				{{ form.mediatype.label }}{{ form.mediatype }}
 			</li>
 		</ul>
-		<button class="continueBtn">
+		<button class="continueBtn" type="button">
 			<span>Continue</span>
 		</button>
 	</fieldset>
 	<fieldset class="final">
+		<p>Please report the campaign ad aired on <span class="mediatype"></span> in <span class="zipcode"></span>.</p>
+		<fieldset class="radio">
+			<ul>
+				<li>
+					{{ form.radio_callsign.label }}
+					{{ form.radio_callsign }}
+				</li>
+			</ul>
+		</fieldset>
+		<fieldset class="television">
+			<ul>
+				<li>
+					{{ form.tv_provider.label }}
+					{{ form.tv_provider }}
+				</li>
+				<li>
+					{{ form.tv_channel.label }}
+					{{ form.tv_channel }}
+				</li>
+			</ul>
+		</fieldset>
 		<ul>
-			<li>
-				{{ form.radio_callsign.label }}
-				{{ form.radio_callsign }}
-			</li>
-			<li>
-				{{ form.tv_provider.label }}
-				{{ form.tv_provider }}
-			</li>
-			<li>
-				{{ form.tv_channel.label }}
-				{{ form.tv_channel }}
-			</li>
 			<li>
 				{{ form.date.label }}
 				{{ form.date }}
@@ -58,27 +67,10 @@
 				{{ form.description }}
 			</li>
 		</ul>
-		<button class="continueBtn" type="submit">
+		<input type="submit" value="Submit">
+		<button class="submitBtn" type="submit">
 			<span>Submit</span>
 		</button>
 	</fieldset>
 	{{ form.referrer }}
 </form>
-
-<script>
-	var toggleMediaType = function() {
-		var mt = $('#mediatype').val();
-		$('fieldset').addClass('disabled');
-		if (mt) $('fieldset#' + mt + '-fields').removeClass('disabled');
-	};
-	$().ready(function() {
-		$('fieldset.initial button').click(function() {
-			$('fieldset.initial').hide();
-			$('fieldset.final').show();
-			return false;
-		});
-		// $('#reportAd').submit(function() {
-		// 	
-		// });
-	});
-</script>

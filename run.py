@@ -1,7 +1,9 @@
 #!/usr/bin/env python
-from cupcakes import app as application, settings
+from cupcakes import app, settings
 
 if __name__ == "__main__":
+    
+    port = 8000 if settings.DEBUG else 80
 
-    application.secret_key = settings.SECRET_KEY or "thisreallyisntasecretkey"
-    application.run(port=8000, debug=settings.DEBUG)
+    app.secret_key = settings.SECRET_KEY or "thisreallyisntasecretkey"
+    app.run(port=port, debug=settings.DEBUG)

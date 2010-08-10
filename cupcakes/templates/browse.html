@@ -11,6 +11,8 @@
 			<h2>Browse submissions</h2>
 		{% endif %}
 		
+		<a href="/download">Download all as CSV</a>
+		
 		<div id="filter">
 			<span id="filterInstructions">Not seeing the results you’re after, revise your search below</span>
 			<form action="/browse" method="get">
@@ -85,18 +87,25 @@
 					{% endif %}
 				{% endif %}
 
-				<div id="pagination">
-					<!--
-					<span id="current">1</span>
-					<a href="#">2</a>
-					<a href="#">3</a>
-					<a href="#">4</a>
-					<a href="#">5</a>
-					<a href="#">6</a>
-					-->
-					{% if pager.page_start < pager.page_end %}Results {{ pager.page_start }} - {% else %}Result {% endif %}
-					{{ pager.page_end }} of {{ pager.total }}
-				</div>
+				{% if pager.last_page > 1 %}
+					<div id="pagination">
+						{% for i in range(1, pager.last_page + 1) %}
+							{% if i == pager.page %}
+								<span id="current">{{ i }}</span>
+							{% else %}
+								{% if i == 1 %}
+									<a href="/browse{% if qs %}?{{ qs }}{% endif %}">1</a>
+								{% else %}
+									<a href="/browse?page={{ i }}{% if qs %}&amp;{{ qs }}{% endif %}">{{ i }}</a>
+								{% endif %}
+							{% endif %}
+						{% endfor %}
+						<!--
+						{% if pager.page_start < pager.page_end %}Results {{ pager.page_start }} - {% else %}Result {% endif %}
+						{{ pager.page_end }} of {{ pager.total }}
+						-->
+					</div>
+				{% endif %}
 
 				{% if pager.has_next %}
 					<div id="nextWrapper">

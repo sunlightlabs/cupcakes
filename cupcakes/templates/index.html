@@ -45,3 +45,53 @@
 	</div>
 
 {% endblock %}
+
+{% block scripts %}
+	<script>
+		$().ready(function() {
+			
+			$('fieldset.initial button').click(function() {
+				
+				var mt = $('#mediatype').val();
+				var zip = $('#zipcode').val();
+				
+				if (!zip.match(/\d{5}/)) {
+					
+					alert('A valid 5 digit zipcode is required');
+					
+				} else if (!mt) {
+					
+					alert('Media Type is required');
+					
+				} else {
+					
+					var fsFinal = $('fieldset.final');
+					
+					fsFinal.find('span.mediatype').html(mt);
+					fsFinal.find('span.zipcode').html(zip);
+					
+					$('fieldset.' + mt).show();
+					
+					$('fieldset.initial').hide();
+					fsFinal.show();
+					
+				}
+				
+				return false;
+				
+			});
+			
+			$('form#reportAd').submit(function() {
+				var valid = true;
+				var mt = $('#mediatype').val();
+				var provider = $('#tv_provider').val();
+				if (mt == 'television' && (provider == '---' || !provider)) {
+					alert('Television provider is required');
+					valid = false;
+				}
+				return valid;
+			});
+			
+		});
+	</script>
+{% endblock %}

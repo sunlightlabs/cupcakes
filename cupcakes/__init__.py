@@ -1,8 +1,10 @@
+from cStringIO import StringIO
 from cupcakes import settings
 from cupcakes.forms import SubmissionForm, FilterForm
 from cupcakes.geo import YahooGeocoder
 from flask import Flask, Response, g, render_template, redirect, request, session, url_for
-from pymongo import Connection
+from pymongo import Connection, DESCENDING
+import csv
 import datetime
 import json
 import math
@@ -36,14 +38,28 @@ def after_request(response):
     
 # application
 
+RECENT_SORT = [('timestamp',DESCENDING), ('date_aired', DESCENDING)]
+
 @app.route('/')
 def index():
+    
+    """ The index with the submission form and recent submissions.
+    """
+    
     form = SubmissionForm(request.form)
-    recent = g.db.submissions.find().sort('-timestamp').limit(3)
+    recent = g.db.submissions.find().sort(RECENT_SORT).limit(3)
     return render_template('index.html', form=form, recent=recent)
 
 @app.route('/submit', methods=['POST'])
 def submit():
+    
+    """ On post, save form. The form shows errors if validation fails.
+        
+        If the form is valid, a further step of geocoding is done.
+        The zipcode is passed to Yahoo to get information about the
+        county, city, and state that the zipcode is in. This data is then
+        cached to save on future geocoding calls.
+    """
     
     form = SubmissionForm(request.form)
     
@@ -51,7 +67,7 @@ def submit():
         form.referrer.data = request.referrer
     
     if not form.validate():
-        recent = g.db.submissions.find().sort('-timestamp').limit(3)    
+        recent = g.db.submissions.find().sort(RECENT_SORT).limit(3)  
         return render_template('index.html', form=form, recent=recent)
         
     session['referrer'] = form.referrer.data
@@ -102,16 +118,29 @@ def thanks():
 
 @app.route('/browse', methods=['GET'])
 def browse():
+    """ Browse and filter submissions.
+        
+        Filter parameters:
+        candidate - name of candidate
+        sponsor - name of sponsor
+        state - state in which ad aired (from geocoding of zipcode)
+        zipcode - user specified zipcode in which ad aired
+    """
 
+    # get filter form
     form = FilterForm(request.args)
+    
+    # basic paging
     
     page = int(request.args.get('page', 1))
     limit = settings.PAGE_SIZE
     offset = limit * (page - 1)
+
+    # build filter spec and description phrase
     
     spec = {}
     qdesc_phrases = []
-        
+
     if 'candidate' in request.args and request.args['candidate']:
         spec['candidate'] = re.compile(request.args['candidate'], re.I)
         qdesc_phrases.append('about &#8220;%s&#8221;' % request.args['candidate'])
@@ -131,14 +160,17 @@ def browse():
         else:
             qdesc_phrases.append('aired in %s' % request.args['zipcode'])
 
+    # copy params for returning as querystring
     params = request.args.copy()
     if 'page' in params:
         del params['page']
     
-    submissions = g.db.submissions.find(spec).sort('-timestamp').skip(offset).limit(limit)
+    # get submissions that match filter criteria
+    submissions = g.db.submissions.find(spec).sort(RECENT_SORT).skip(offset).limit(limit)
     total = g.db.submissions.find(spec).count()
     last_page = int(math.ceil(float(total) / float(limit)))
     
+    # redirect if requested page is greater than max page
     if page > last_page and last_page > 0:
         if last_page > 1:
             params['page'] = last_page
@@ -146,6 +178,7 @@ def browse():
         else:
             return redirect('/browse')
     
+    # paging data
     pager = {
         'has_previous': offset > 0,
         'has_next': total > offset + limit,
@@ -154,6 +187,7 @@ def browse():
         'page': page,
         'page_start': offset + 1,
         'page_end': min(offset + limit, total),
+        'last_page': last_page,
         'previous_page': page - 1,
         'next_page': page + 1,
         'total': total,
@@ -166,25 +200,29 @@ def browse():
                            qdesc=' '.join(qdesc_phrases),
                            qs=urllib.urlencode(params))
     
-@app.route('/submissions.json', methods=['GET'])
+@app.route('/download', methods=['GET'])
 def download():
-    headers = ('id','mediatype','for_against','radio_callsign','tv_provider','tv_channel',
+    """ Download all submissions as CSV.
+    """
+    
+    headers = ('_id','mediatype','for_against','radio_callsign','tv_provider','tv_channel',
                'zipcode','candidate','sponsor','description','date_aired','city','state')
-    def gen():
-        for d in g.db.submissions.find():
-            yield {
-                'id': "%s" % d['_id'],
-                'mediatype': d['mediatype'],
-                'for_against': d['for_against'],
-                'radio_callsign': d['radio_callsign'],
-                'tv_provider': d['tv_provider'],
-                'tv_channel': d['tv_channel'],
-                'zipcode': d['zipcode'],
-                'candidate': d['candidate'],
-                'sponsor': d['sponsor'],
-                'description': d['description'],
-                'date_aired': d['date_aired'].isoformat(),
-                'state': d['state'],
-            }
-    js = json.dumps([d for d in gen()])
-    return Response(js, mimetype="application/json")
+    
+    bffr = StringIO()
+    writer = csv.writer(bffr)
+    writer.writerow(headers)
+    
+    for d in g.db.submissions.find():
+        row = [d.get(key, '') for key in headers]
+        writer.writerow(row)
+    
+    content = bffr.getvalue()
+    bffr.close()
+    
+    print content
+    
+    now = datetime.datetime.utcnow().strftime('%Y%m%d%H%M%S')
+    
+    return Response(content, mimetype="text/csv", headers={
+        'Content-Disposition': 'Content-Disposition: attachment; filename=sunlightcam-%s.csv' % now,
+    })

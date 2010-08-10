@@ -85,7 +85,9 @@ button.searchBtn { width: 45px; height: 31px; background: url(../images/button_g
 .continueBtn { width: 134px; height: 31px; background: url(../images/button_continue.png) top left no-repeat; margin-left: 150px; margin-top: 40px; }
 .filterBtn { width: 84px; height: 31px; background: url(../images/button_filter.png) top left no-repeat; margin-top: 25px;}
 
-fieldset.final { display: none; }
+fieldset.final { display: block; }
+fieldset.radio { display: block; }
+fieldset.television { display: block; }
 
 table { width: 940px; }
 tr#titles th { text-transform: uppercase; color: #1b0500; font-weight: bold; padding: 0 15px 15px; font-size: 105%;}

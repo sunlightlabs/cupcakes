@@ -60,6 +60,32 @@ US_STATES = (
     ("WY", "Wyoming"),
 )
 
+PROVIDERS = [(s, s) for s in (
+    "",
+    "AT&T Digital TV",
+    "Bresnan",
+    "Brighthouse Networks",
+    "CableOne",
+    "Cablevision Systems",
+    "Charter Communications",
+    "Comcast",
+    "Cox Communications",
+    "DirecTV",
+    "Dish Network",
+    "Insight",
+    "Mediacom",
+    "RCN",
+    "Suddenlink",
+    "Time Warner Cable",
+    "Verizon FIOS",
+    "WideOpenWest",
+    "---",
+    "other cable",
+    "other satellite",
+    "Broadcast (antenna)",
+    "Internet (Hulu, YouTube, etc.)",
+)]
+
 TIMES = []
 current = datetime.datetime(1981, 8, 6, 0, 0, 0)
 xv_minutes = datetime.timedelta(0, 0, 0, 0, 15)
@@ -108,11 +134,11 @@ class MediaTypeValidator(object):
 
 class SubmissionForm(Form):
     date = DateField(u'Date', default=datetime.date.today, widget=DateInput(), validators=[validators.Required()])
-    time = SelectField(u'Time', choices=TIMES, validators=[validators.Required()])
+    time = SelectField(u'Time', default='12:00', choices=TIMES, validators=[validators.Required()])
     mediatype = SelectField(u'Media type', choices=MEDIATYPES, validators=[MediaTypeValidator()])
     for_against = SelectField(u'Aired', choices=FOR_AGAINST)
     radio_callsign = TextField(u'Radio station')
-    tv_provider = TextField(u'Provider')
+    tv_provider = SelectField(u'Provider', choices=PROVIDERS)
     tv_channel = TextField(u'Channel')
     zipcode = TextField(u'Zipcode', validators=[validators.Length(min=5, max=5)])
     candidate = TextField(u'Candidate mentioned')
