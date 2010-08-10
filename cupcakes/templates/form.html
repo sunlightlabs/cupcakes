@@ -6,16 +6,21 @@
 			{% endfor %}
 		</ul>
 	{% endif %}
-	<ul>
-		<fieldset class="initial">
+	<fieldset class="initial">
+		<ul>
 			<li>
 				{{ form.zipcode.label }}{{ form.zipcode }}
 			</li>
 			<li>
 				{{ form.mediatype.label }}{{ form.mediatype }}
 			</li>
-		</fieldset>
-		<fieldset class="final">
+		</ul>
+		<button class="continueBtn">
+			<span>Continue</span>
+		</button>
+	</fieldset>
+	<fieldset class="final">
+		<ul>
 			<li>
 				{{ form.radio_callsign.label }}
 				{{ form.radio_callsign }}
@@ -27,7 +32,6 @@
 			<li>
 				{{ form.tv_channel.label }}
 				{{ form.tv_channel }}
-			</li>
 			</li>
 			<li>
 				{{ form.date.label }}
@@ -52,14 +56,12 @@
 			<li>
 				{{ form.description.label }}
 				{{ form.description }}
-			</li>	
-		</fieldset>
-		<li>
-			<button class="continueBtn" type="submit">
-				<span>Continue</span>
-			</button>
-		</li>
-	</ul>
+			</li>
+		</ul>
+		<button class="continueBtn" type="submit">
+			<span>Submit</span>
+		</button>
+	</fieldset>
 	{{ form.referrer }}
 </form>
 
@@ -70,7 +72,13 @@
 		if (mt) $('fieldset#' + mt + '-fields').removeClass('disabled');
 	};
 	$().ready(function() {
-		$('#mediatype').change(toggleMediaType);
-		toggleMediaType();
+		$('fieldset.initial button').click(function() {
+			$('fieldset.initial').hide();
+			$('fieldset.final').show();
+			return false;
+		});
+		// $('#reportAd').submit(function() {
+		// 	
+		// });
 	});
 </script>
