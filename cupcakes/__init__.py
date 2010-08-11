@@ -32,6 +32,10 @@ conn = Connection(settings.MONGODB_HOST or 'localhost', settings.MONGODB_PORT or
 def before_request():
     g.db = conn.cupcakes
     
+    referrer = session.get('referrer', None)
+    if not referrer:
+        session['referrer'] = request.referrer
+    
 @app.after_request
 def after_request(response):
     return response
@@ -48,12 +52,8 @@ def index():
     """ The index with the submission form and recent submissions.
     """
     
-    referrer = session.get('referrer', None)
-    if not referrer:
-        session['referrer'] = request.referrer
-    
     form = SubmissionForm(request.form)
-    form.referrer.data = session['referrer']
+    form.referrer.data = session.get('referrer', '')
     recent = g.db.submissions.find().sort(RECENT_SORT).limit(3)
     return render_template('index.html', form=form, recent=recent)
 
