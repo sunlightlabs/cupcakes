@@ -30,8 +30,11 @@ class YahooGeocoder(object):
         
         if 'Results' in rs:
             
-            loc = rs['Results'][0]
-            loc['latitude'] = float(loc['latitude'])
-            loc['longitude'] = float(loc['longitude'])
+            for loc in rs['Results']:
+                
+                if loc['country'] == 'United States':
+                    
+                    loc['latitude'] = float(loc['latitude'])
+                    loc['longitude'] = float(loc['longitude'])
         
-            return loc
+                    return loc

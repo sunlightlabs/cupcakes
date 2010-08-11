@@ -3,16 +3,25 @@
 {% block bodyclass %}about{% endblock %}
 
 {% block content %}
-<div id="ltColumn">
-	<div id="options">
-	    <p><strong>Thanks for your submission!</strong></p>
-	    
-	    <p>Return to <a href="#">{{ referrer }}</a>, <a href="#">browse submissions</a>, or submit another ad.</p>
+
+	<div id="ltColumn">
+		<div id="options">
+		    <p><strong>Thanks for your submission!</strong></p>
+			{% if return_to_ref %}
+		    	<p>Return to <a href="{{ referrer }}">{{ referrer_domain }}</a>, <a href="/browse">browse submissions</a>, or submit another ad.</p>
+			{% else %}
+				<p><a href="/browse">Browse submissions</a> or submit another ad.</p>
+			{% endif %}
+		</div>
 	</div>
-</div>
-<div id="rtColumn">
-    <h2>Report Another Ad</h2>
-	{% include "form.html" %}
-</div>    
 	
+	<div id="rtColumn">
+	    <h2>Report Another Ad</h2>
+		{% include "form.html" %}
+	</div>    
+	
+{% endblock %}
+
+{% block scripts %}
+	<script src="/static/scripts/form.js"></script>
 {% endblock %}

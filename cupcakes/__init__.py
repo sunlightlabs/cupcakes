@@ -48,7 +48,12 @@ def index():
     """ The index with the submission form and recent submissions.
     """
     
+    referrer = session.get('referrer', None)
+    if not referrer:
+        session['referrer'] = request.referrer
+    
     form = SubmissionForm(request.form)
+    form.referrer.data = session['referrer']
     recent = g.db.submissions.find().sort(RECENT_SORT).limit(3)
     return render_template('index.html', form=form, recent=recent)
 
@@ -66,13 +71,11 @@ def submit():
     form = SubmissionForm(request.form)
     
     if not form.referrer.data:
-        form.referrer.data = request.referrer
+        form.referrer.data = session['referrer']
     
     if not form.validate():
         recent = g.db.submissions.find().sort(RECENT_SORT).limit(3)  
         return render_template('index.html', form=form, recent=recent)
-        
-    session['referrer'] = form.referrer.data
     
     submission = form.data.copy()
     submission['timestamp'] = datetime.datetime.utcnow()
@@ -81,7 +84,7 @@ def submit():
     lookup = g.db.geo.find_one({'zipcode': submission['zipcode']})
     if lookup:
         location = lookup['geo']
-    else:
+    else:    
         location = geo.lookup(postal=submission['zipcode'])
         if location:
             g.db.geo.save({
@@ -104,7 +107,7 @@ def submit():
     del submission['time']
 
     # timezone conversion
-    if submission['timezone']:
+    if 'timezone' in submission and submission['timezone']:
         tz = pytz.timezone(submission['timezone'])
         tz_dt = tz.localize(submission['date_aired'])
         submission['date_aired_utc'] = tz_dt.astimezone(pytz.utc)
@@ -117,11 +120,12 @@ def submit():
 def thanks():
     params = {}
     params['form'] = SubmissionForm(request.form)
-    referrer = session.pop('referrer', None)
-    if referrer and referrer != settings.DOMAIN:
+    referrer = session.get('referrer', None)
+    if referrer:
         u = urlparse(referrer)
         params['referrer'] = referrer
         params['referrer_domain'] = u.netloc
+        params['return_to_ref'] = u.netloc != settings.DOMAIN
     return render_template('thanks.html', **params)
 
 @app.route('/browse', methods=['GET'])
@@ -250,8 +254,9 @@ def download():
     """ Download all submissions as CSV.
     """
     
-    headers = ('_id','mediatype','for_against','radio_callsign','tv_provider','tv_channel',
-               'zipcode','candidate','sponsor','description','date_aired','city','state')
+    headers = ('timestamp', 'mediatype','for_against','radio_callsign',
+               'tv_provider','tv_channel', 'zipcode','candidate','sponsor',
+               'description','date_aired','city','state')
     
     bffr = StringIO()
     writer = csv.writer(bffr)
@@ -263,8 +268,6 @@ def download():
     
     content = bffr.getvalue()
     bffr.close()
-    
-    print content
     
     now = datetime.datetime.utcnow().strftime('%Y%m%d%H%M%S')
     
