@@ -1,0 +1,19 @@
+h1 a { background: url(../images/logo_8.png) top left no-repeat;}
+div#feature{ background: url(../images/feature_text_8.png) center top no-repeat; }
+h2#reportingTitle { background: url(../images/text_reporting_8.png) left top no-repeat;}
+h2#reportsTitle { background: url(../images/text_recent_8.png) left top no-repeat;}
+
+body.home div#ltColumn { position: fixed;}
+
+ul#recentReports li { background: url(../images/icon_circles_8.png) top left no-repeat;}
+
+span.for { background: url(../images/icon_for_8.png) top left no-repeat;}
+td.for { background: url(../images/icon_for_8.png) center center no-repeat; }
+span.against { background: url(../images/icon_against_8.png) top left no-repeat;}
+td.against { background: url(../images/icon_against_8.png) center center no-repeat; }
+
+a#sunlight { background: url(../images/logo_sunlight_8.png) top left no-repeat; }
+
+button.searchBtn { background: url(../images/button_go_8.png) top left no-repeat;}
+
+input#id_search { background: url(../images/bg_search_8.png) top left no-repeat;}
