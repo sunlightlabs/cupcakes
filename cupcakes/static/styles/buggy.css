@@ -12,6 +12,8 @@ td.for { background: url(../images/icon_for_8.png) center center no-repeat; }
 span.against { background: url(../images/icon_against_8.png) top left no-repeat;}
 td.against { background: url(../images/icon_against_8.png) center center no-repeat; }
 
+tr.even td.for, tr.even td.against { background-color:#F7F5F0;}
+
 a#sunlight { background: url(../images/logo_sunlight_8.png) top left no-repeat; }
 
 button.searchBtn { background: url(../images/button_go_8.png) top left no-repeat;}
