@@ -15,7 +15,7 @@
 				<h1><a href="/"><small>Sunlight</small><big>Campaign Ad Monitor</big></a></h1>
 				<form id="searchForm" action="/search" method="post">
 					<span class="tip">Find ads, candidates or locations</span>
-					<input id="id_search" type="text" value="Search Now" name="q"/>
+					<input id="id_search" type="text" placeholder="Search Now" name="q"/>
 					<button class="searchBtn" type="submit">
 						<span>Go</span>
 					</button>
@@ -33,6 +33,12 @@
 			</div>
 		</div>
 		<script src="/static/scripts/jquery-1.4.2.min.js"></script>
+		<script src="/static/scripts/jquery.placehold-0.2.min.js"></script>
+		<script>
+			$().ready(function() {
+				$("#id_search").placehold();
+			});
+		</script>
 		{% block scripts %}{% endblock %}
 	</body>
 </html>
