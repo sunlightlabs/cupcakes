@@ -126,13 +126,3 @@ geocoder.write_cache('data/geo_citystate.json')
 # ensure geo index
 
 mongo_conn.cupcakes.tvstations.ensure_index([("location", GEO2D)])
-
-center = [39.13857, -77.19752]
-radius = 0.5
-res = mongo_conn.cupcakes.tvstations.find({
-    "power": "high",
-    "location" : {"$within" : {"$center" : [center, radius]}}
-}).sort('channel').limit(20)
-
-for tv in res:
-    print "[%s] %s %s %s" % (tv['state'], tv['callsign'].split('-')[0], tv['network'], tv['channel'])

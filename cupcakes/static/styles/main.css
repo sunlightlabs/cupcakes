@@ -36,6 +36,8 @@ input:focus, textarea:focus { background: #f6f6f6 url(../images/bg_input.png) bo
 input, textarea, select { text-transform: capitalize; }
 input#id_search { background: url(../images/bg_search.png) top left no-repeat; width: 183px; height: 22px; border: none; margin-right: 10px; color: #a19995; font-size: 110%; font-family: Georgia, "Times New Roman", Times, serif;}
 
+input#tv_channel_other { display: none; margin-top: 15px; }
+
 div#feature { background: url(../images/feature_text.png) top center no-repeat; width: 573px; height: 109px; text-indent: -9999em; display: block; margin: 140px auto;}
 div#pageMain { width: 960px; margin: 0 auto; padding: 0 10px;}
 body.home div#pageMain { padding: 0;}

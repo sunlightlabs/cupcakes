@@ -4,9 +4,11 @@ from cupcakes.forms import SubmissionForm, FilterForm, US_STATES
 from cupcakes.geo import YahooGeocoder
 from flask import Flask, Response, g, render_template, redirect, request, session, url_for
 from pymongo import Connection, DESCENDING
+from pymongo.objectid import ObjectId
 from urlparse import urlparse
 import csv
 import datetime
+import json
 import math
 import pytz
 import re
@@ -23,6 +25,38 @@ def datetimeformat_filter(value, format='%b %d %I:%M %p'):
 # geo stuff
 
 geo = YahooGeocoder(settings.YAHOO_APPID)
+
+def zipcode_lookup(zipcode):
+    lookup = g.db.geo.find_one({'zipcode': zipcode})
+    if lookup:
+        location = lookup['geo']
+    else:    
+        location = geo.lookup(postal=zipcode)
+        if location:
+            g.db.geo.save({
+                'zipcode': zipcode,
+                'geo': location,
+            })
+    return location
+
+# station stuff
+
+def tv_lookup(zipcode):
+    
+    if zipcode and re.match('\d{5}', zipcode):
+        
+        location = zipcode_lookup(zipcode)
+    
+        if location:
+    
+            center = [location['latitude'], location['longitude']]
+            radius = 1.25
+            res = g.db.tvstations.find({
+                "power": "high",
+                "location" : {"$within" : {"$center" : [center, radius]}}
+            }).sort('channel').limit(20)
+            
+            return res
 
 # request lifecycle
 
@@ -68,7 +102,10 @@ def submit():
         cached to save on future geocoding calls.
     """
     
+    valid_tv_stations = ['other'] + [str(r['_id']) for r in tv_lookup(request.form.get('zipcode', None))]
+    
     form = SubmissionForm(request.form)
+    form.tv_channel.choices = [(v, '%s %s (%s)' % (r['network'], r['channel'], r['callsign'])) for v in valid_tv_stations]
     
     if not form.referrer.data:
         form.referrer.data = session['referrer']
@@ -80,17 +117,18 @@ def submit():
     submission = form.data.copy()
     submission['timestamp'] = datetime.datetime.utcnow()
     
+    if submission['tv_channel'] == 'other':
+        if submission['tv_channel_other']:
+            submission['tv_channel'] = submission['tv_channel_other']
+    else:
+        channel = g.db.tvstations.find_one({u'_id': ObjectId(submission['tv_channel'])})
+        if channel:
+            submission['tv_channel'] = '%s %s %s' % (channel['callsign'], channel['network'], channel['channel'])
+        else:
+            submission['tv_channel'] = 'unknown'
+    
     # location lookup
-    lookup = g.db.geo.find_one({'zipcode': submission['zipcode']})
-    if lookup:
-        location = lookup['geo']
-    else:    
-        location = geo.lookup(postal=submission['zipcode'])
-        if location:
-            g.db.geo.save({
-                'zipcode': submission['zipcode'],
-                'geo': location,
-            })
+    location = zipcode_lookup(submission['zipcode'])
         
     if location:
         submission['city'] = location.get('city', None)
@@ -274,3 +312,20 @@ def download():
     return Response(content, mimetype="text/csv", headers={
         'Content-Disposition': 'Content-Disposition: attachment; filename=sunlightcam-%s.csv' % now,
     })
+
+@app.route('/stations/tv', methods=['GET'])
+def stations_tv():
+    
+    zipcode = request.args.get('zipcode', None)
+    stations = []
+    
+    res = tv_lookup(zipcode)
+    
+    if res:
+        for r in res:
+            stations.append({
+                'id': str(r['_id']),
+                'name': '%s %s (%s)' % (r['network'], r['channel'], r['callsign']),
+            })
+            
+    return Response(json.dumps(stations), mimetype="application/json")
