@@ -8,11 +8,14 @@ from pymongo.objectid import ObjectId
 from urlparse import urlparse
 import csv
 import datetime
-import json
 import math
 import pytz
 import re
 import urllib
+try:
+    import json
+except:
+    import simplejson as json
 
 app = Flask(__name__)
 
@@ -329,3 +332,11 @@ def stations_tv():
             })
             
     return Response(json.dumps(stations), mimetype="application/json")
+    
+@app.route('/about', methods=['GET'])
+def about():
+   return render_template('about.html')
+   
+@app.route('/use', methods=['GET'])
+def use():
+  return render_template('use.html')

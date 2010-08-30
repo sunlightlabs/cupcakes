@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block bodyclass %}about{% endblock %}
+
+{% block content %}
+
+		<h2>Use our ads</h2>
+		<span class="tip">Right click on each ad to copy or to save.</span>
+		<ul id="ads">
+		    <li>
+                <h3>728x90</h3>
+                <img alt="728x90 ad" src="static/images/cam_728x90.jpg" />
+            </li>
+            <li class="clear">
+                <h3>160x600</h3>
+                <img alt="160x600 ad" src="static/images/cam_160x600_2.jpg" />
+            </li>
+            <li>
+                <h3>300x250</h3>
+                <img alt="300x250 ad" src="static/images/cam_300x250.jpg" />
+            </li>
+        </ul>
+	
+{% endblock %}
+
+{% block scripts %}
+	<script src="/static/scripts/form.js"></script>
+{% endblock %}
