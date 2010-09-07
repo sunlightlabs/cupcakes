@@ -145,6 +145,7 @@ class SubmissionForm(Form):
     internet_link = TextField(u'Site URL')
     zipcode = TextField(u'Zipcode', validators=[validators.Length(min=5, max=5)])
     candidate = TextField(u'Candidate mentioned')
+    issue = TextField(u'Issue')
     sponsor = TextField(u'Paid for by')
     description = TextAreaField(u'Description of ad')
     referrer = HiddenField()

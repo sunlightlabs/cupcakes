@@ -3,7 +3,7 @@ from cupcakes import settings
 from cupcakes.forms import SubmissionForm, FilterForm, US_STATES
 from cupcakes.geo import YahooGeocoder
 from flask import Flask, Response, g, render_template, redirect, request, session, url_for
-from pymongo import Connection, DESCENDING
+from pymongo import Connection, DESCENDING, GEO2D
 from pymongo.objectid import ObjectId
 from urlparse import urlparse
 import csv
@@ -64,6 +64,7 @@ def tv_lookup(zipcode):
 # request lifecycle
 
 conn = Connection(settings.MONGODB_HOST or 'localhost', settings.MONGODB_PORT or 27017)
+conn.cupcakes.tvstations.ensure_index([("location", GEO2D)])
 
 @app.before_request
 def before_request():

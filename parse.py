@@ -59,6 +59,11 @@ csv_out = CSVEmitter(open('data/broadcasttv.csv', 'w'), fieldnames=OUTFIELDS)
 mongo_host = settings.MONGODB_HOST if hasattr(settings, 'MONGODB_HOST') else 'localhost'
 mongo_port = settings.MONGODB_PORT if hasattr(settings, 'MONGODB_PORT') else 27017
 mongo_conn = Connection(mongo_host, mongo_port)
+
+mongo_conn.cupcakes.tvstations.ensure_index([("location", GEO2D)])
+
+exit()
+
 mongo_out = MongoDBEmitter('cupcakes', 'tvstations', conn=mongo_conn, drop_collection=True)
 
 # parse full power csv

@@ -44,10 +44,11 @@
 						<th class="sort">Zip</th>
 						<th class="sort">State</th>
 						<th class="sort" id="dateAired">Date Aired</th>
+						<th class="sort">Sponsor</th>
 						<th class="sort">Aired On</th>
 						<th class="sort">Support</th>
 						<th class="sort">Candidate</th>
-						<th class="sort">Sponsor</th>
+						<th>Issue</th>
 						<th>Description</th>
 					</tr>
 				</thead>
@@ -57,6 +58,7 @@
 							<td class="zipcode">{{ s.zipcode }}</td>
 							<td class="state">{{ s.state }}</td>
 							<td class="date_aired" title="{{ s.date_aired }}">{{ s.date_aired|datetimeformat }}</td>
+							<td class="sponsor">{{ s.sponsor }}</td>
 							<td class="mediatype">
 								{% if s.mediatype == 'radio' %}
 									{{ s.radio_callsign }}
@@ -70,7 +72,7 @@
 								{{ s.for_against }}
 							</td>
 							<td class="candidate">{{ s.candidate }}</td>
-							<td class="sponsor">{{ s.sponsor }}</td>
+							<td class="issue">{{ s.issue }}</td>
 							<td class="description">{{ s.description }}</td>
 						</tr>
 					{% endfor %}
@@ -126,7 +128,10 @@
 	<script type="text/javascript">
 		$().ready(function() { 
 			$("#resultsTable").tablesorter({
-				headers: { 7: { sorter: false } },
+				headers: {
+					7: { sorter: false },
+					8: { sorter: false }
+				},
 				textExtraction: function(node) {
 					var title = $(node).attr('title');
 					return title ? title : node.innerHTML;
