@@ -71,6 +71,8 @@ var zipcodeChange = function() {
 			}
 			html += '<option value="other">Other</option>';
 			sel.html(html);
+			
+			channelChange();
 		
 		});
 		
@@ -82,6 +84,15 @@ var mediatypeChange = function() {
 	var mt = $('#mediatype').val();
 	$('form#reportAd fieldset.final fieldset').slideUp();
 	$('form#reportAd fieldset.final fieldset.' + mt).slideDown();
+};
+
+var channelChange = function() {
+	var channel = $('form#reportAd select#tv_channel').val();
+	if (channel == 'other') {
+		$('#tv_channel_other').show();
+	} else {
+		$('#tv_channel_other').hide();
+	}
 };
 
 $().ready(function() {
@@ -101,12 +112,16 @@ $().ready(function() {
 		
 	});
 	
-	$('form#reportAd select#tv_channel').bind('change', function() {
-		var channel = $(this).val();
-		if (channel == 'other') {
-			$('#tv_channel_other').show();
+	$('form#reportAd select#tv_channel').bind('change', channelChange);
+	
+	$('form#reportAd select#tv_provider').bind('change', function() {
+		var provider = $(this).val();
+		if (provider == 'Internet (Hulu, YouTube, etc.)') {
+			$('#internet_link_container').show();
+			$('#tv_channel_container').hide();
 		} else {
-			$('#tv_channel_other').hide();
+			$('#internet_link_container').hide();
+			$('#tv_channel_container').show();
 		}
 	});
 	

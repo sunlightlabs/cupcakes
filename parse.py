@@ -40,7 +40,8 @@ class Geocoder(Filter):
         
         if loc is None:
             loc = self.geocoder.lookup(city=record['city'], state=record['state'])
-            print "--- %s (%s, %s)" % (key, loc['latitude'], loc['longitude'])
+            if loc:
+                print "--- %s (%s, %s)" % (key, loc['latitude'], loc['longitude'])
             self.cache[key] = loc
         
         if loc:
@@ -82,7 +83,7 @@ run_recipe(
         'city': 'CITY',
         'state': 'ST',
     }),
-    FieldModifier('channel', lambda s: int(s)),
+    FieldModifier('channel', lambda s: int(s) if s else None),
     geocoder,
     #csv_out,
     mongo_out,

@@ -96,6 +96,7 @@ for i in range(0, 24 * 4):
 FOR_AGAINST = (
     ('for', 'in favor of candidate'),
     ('against', 'against candidate'),
+    ('neither', 'neither'),
 )
 MEDIATYPES = [(c,c) for c in ('','radio','television')]
 
@@ -136,14 +137,15 @@ class SubmissionForm(Form):
     date = DateField(u'Date', default=datetime.date.today, widget=DateInput(), validators=[validators.Required()])
     time = SelectField(u'Time', default='12:00', choices=TIMES, validators=[validators.Required()])
     mediatype = SelectField(u'Media type', choices=MEDIATYPES, validators=[MediaTypeValidator()])
-    for_against = SelectField(u'Aired', choices=FOR_AGAINST)
+    for_against = SelectField(u'Type of ad', choices=FOR_AGAINST)
     radio_callsign = TextField(u'Radio station')
     tv_provider = SelectField(u'Provider', choices=PROVIDERS)
     tv_channel = SelectField(u'Channel', choices=[('other', 'Other')])
-    tv_channel_other = TextField(u'Channel Other')
+    tv_channel_other = TextField(u'Channel other')
+    internet_link = TextField(u'Site URL')
     zipcode = TextField(u'Zipcode', validators=[validators.Length(min=5, max=5)])
     candidate = TextField(u'Candidate mentioned')
-    sponsor = TextField(u'Sponsor')
+    sponsor = TextField(u'Paid for by')
     description = TextAreaField(u'Description of ad')
     referrer = HiddenField()
 

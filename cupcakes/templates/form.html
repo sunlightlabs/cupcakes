@@ -35,7 +35,11 @@
 					{{ form.tv_provider.label }}
 					{{ form.tv_provider }}
 				</li>
-				<li>
+				<li id="internet_link_container">
+					{{ form.internet_link.label }}
+					{{ form.internet_link }}
+				</li>
+				<li id="tv_channel_container">
 					{{ form.tv_channel.label }}
 					{{ form.tv_channel }}
 					{{ form.tv_channel_other }}
@@ -52,16 +56,16 @@
 				{{ form.time }}
 			</li>
 			<li>
+				{{ form.sponsor.label }}
+				{{ form.sponsor }}
+			</li>
+			<li>
 				{{ form.for_against.label }}
 				{{ form.for_against }}
 			</li>
 			<li>
 				{{ form.candidate.label }}
 				{{ form.candidate }}
-			</li>
-			<li>
-				{{ form.sponsor.label }}
-				{{ form.sponsor }}
 			</li>
 			<li>
 				{{ form.description.label }}
