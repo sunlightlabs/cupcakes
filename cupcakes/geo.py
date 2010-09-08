@@ -5,7 +5,7 @@ try:
 except ImportError:
     import simplejson as json
 
-GEO_PARAMS = ['street','city','state','zip','location','output','postal']
+GEO_PARAMS = ['street','city','state','zip','location','output','postal','q']
 
 class YahooGeocoder(object):
         
@@ -27,6 +27,7 @@ class YahooGeocoder(object):
         js = json.load(urllib2.urlopen(url))
         
         rs = js['ResultSet']
+        print rs
         
         if 'Results' in rs:
             

@@ -50,7 +50,7 @@ def zipcode_lookup(zipcode):
         location = lookup['geo']
     else:
         app.logger.debug('[GEO] %s mongo cache miss' % zipcode)
-        location = geo.lookup(postal=zipcode)
+        location = geo.lookup(q=zipcode)
         if location:
             app.logger.debug('[GEO] %s found in Yahoo API' % zipcode)
             g.db.geo.save({
