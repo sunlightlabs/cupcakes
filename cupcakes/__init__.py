@@ -24,22 +24,41 @@ app = Flask(__name__)
 @app.template_filter('datetimeformat')
 def datetimeformat_filter(value, format='%b %d %I:%M %p'):
     return value.strftime(format)
+
+@app.template_filter('airedon')
+def datetimeformat_filter(s):
+    mt = s.get('mediatype', None)
+    if mt == 'radio':
+        return s.get('radio_callsign')
+    elif mt == 'television':
+        prov = s.get('tv_provider', None)
+        if prov == "Internet (Hulu, YouTube, etc.)":
+            return prov
+        else:
+            return u"%s (%s)" % (s.get('tv_channel', None), prov)
+    return u"unknown"
     
 # geo stuff
 
 geo = YahooGeocoder(settings.YAHOO_APPID)
 
 def zipcode_lookup(zipcode):
+    app.logger.debug('[GEO] looking up zipcode %s' % zipcode)
     lookup = g.db.geo.find_one({'zipcode': zipcode})
     if lookup:
+        app.logger.debug('[GEO] %s found in mongo cache' % zipcode)
         location = lookup['geo']
-    else:    
+    else:
+        app.logger.debug('[GEO] %s mongo cache miss' % zipcode)
         location = geo.lookup(postal=zipcode)
         if location:
+            app.logger.debug('[GEO] %s found in Yahoo API' % zipcode)
             g.db.geo.save({
                 'zipcode': zipcode,
                 'geo': location,
             })
+        else:
+            app.logger.debug('[GEO] %s Yahoo API miss' % zipcode)
     return location
 
 # station stuff
