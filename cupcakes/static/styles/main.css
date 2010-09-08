@@ -143,7 +143,7 @@ ul#ads h3 { display: block; float: none;}
 ul#ads li { float: left; margin: 0 50px 30px 0;}
 
 #navWrapper { background-color: #1d1915; border-bottom: 1px solid #21201d;}
-#nav { background-color: #1d1915; height: 30px; margin: 0 auto; width: 940px; padding: 0 10px; font-size: 95%;}
+#nav { background-color: #1d1915; height: 30px; margin: 0 auto; width: 940px; padding: 0 10px; font-size: 95%; font-family: Georgia, "Times New Roman", Times, serif;}
 #nav ul { float: right; }
 #nav li { float: left; margin-top: 5px;}
 #nav li a { text-decoration: none; color: #bbb9b7;}
