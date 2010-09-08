@@ -59,15 +59,7 @@
 							<td class="state">{{ s.state }}</td>
 							<td class="date_aired" title="{{ s.date_aired }}">{{ s.date_aired|datetimeformat }}</td>
 							<td class="sponsor">{{ s.sponsor }}</td>
-							<td class="mediatype">
-								{% if s.mediatype == 'radio' %}
-									{{ s.radio_callsign }}
-								{% elif s.mediatype == 'television' %}
-									{{ s.tv_channel }} ({{ s.tv_provider }})
-								{% else %}
-									unknown
-								{% endif %}
-							</td>
+							<td class="mediatype">{{ s|airedon }}</td>
 							<td class="for_against {{ s.for_against }}" title="{{ s.for_against }} candidate">
 								{{ s.for_against }}
 							</td>

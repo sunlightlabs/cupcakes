@@ -30,15 +30,7 @@
 						</dd>
 
 						<dt>Aired On:</dt>
-						<dd>
-							{% if s.mediatype == 'radio' %}
-								{{ s.radio_callsign }}
-							{% elif s.mediatype == 'television' %}
-								{{ s.tv_channel }} ({{ s.tv_provider }})
-							{% else %}
-								unknown
-							{% endif %}
-						</dd>
+						<dd>{{ s|airedon }}</dd>
 					</dl>
 				</li>
 			{% endfor %}
