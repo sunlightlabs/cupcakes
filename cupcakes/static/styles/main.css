@@ -24,11 +24,11 @@ body.home div#header { background: url(../images/bg_home.jpg) top center no-repe
 div#header { width: 940px; margin: 0 auto; padding: 0 10px; background: url(../images/bg.jpg) top center no-repeat; height: 189px;}
 div#headerWrapper { background: url(../images/bg_wrapper.jpg) top center repeat-x; height: 189px;}
 
-h1 { float: left; width: 497px; height: 56px; padding-top: 35px;}
+h1 { float: left; width: 497px; height: 56px; padding-top: 40px;}
 h1 a { background: url(../images/logo.png) top left no-repeat; width: 497px; height: 56px; display: block; text-indent: -9999em;}
 
 form#searchForm span.tip { font-family: Georgia, "Times New Roman", Times, serif; color: #d1d3d4; display: block; font-style: oblique; margin-bottom: 10px; text-align: right;}
-form#searchForm { float: right; padding-top: 28px;}
+form#searchForm { float: right; padding-top: 32px;}
 form#searchForm input { float: left;}
 
 .tip { font-family: Georgia, "Times New Roman", Times, serif; margin-bottom: 30px; font-style: oblique; display: block;}
@@ -60,6 +60,8 @@ h2#reportsTitle { text-indent: -9999em; display: block; width: 221px; height: 20
 h2.withAsset { float: left; width: 650px; line-height: 30px; padding-top:10px;}
 
 #searchResult { text-transform: none; font-weight: normal;}
+
+.fullWidthp { width: 610px;}
 
 h3 { font-size: 140%; float: left; margin-right: 10px; margin-bottom: 10px;}
 span.party { float: left; margin-right: 5px;}
@@ -140,12 +142,15 @@ p { margin-bottom: 1em;}
 ul#ads h3 { display: block; float: none;}
 ul#ads li { float: left; margin: 0 50px 30px 0;}
 
-#footerNav { margin: 0 auto; width: 200px; margin-top: 70px; text-align: center;}
-#footerNav li { float: left;  text-transform: uppercase; font-size: 110%;}
-#footerNav li a { text-decoration: none; }
-#footerNav li#about { margin-right: 40px; }
+#navWrapper { background-color: #1d1915; border-bottom: 1px solid #21201d;}
+#nav { background-color: #1d1915; height: 30px; margin: 0 auto; width: 940px; padding: 0 10px; font-size: 95%;}
+#nav ul { float: right; }
+#nav li { float: left; margin-top: 5px;}
+#nav li a { text-decoration: none; color: #bbb9b7;}
+#nav li a:hover { color: #8d1d1b;}
+#nav li#about { margin-right: 40px; }
 
-div#footer { background: url(../images/footer.jpg) top center no-repeat; height: 81px; padding: 30px 60px 0px; margin-bottom: 40px; margin-top: 10px;}
+div#footer { background: url(../images/footer.jpg) top center no-repeat; height: 81px; padding: 30px 60px 0px; margin-bottom: 40px; margin-top: 70px;}
 div#footer a { color: #c5c4c3;}
 a#sunlight { background: url(../images/logo_sunlight.png) top left no-repeat; width: 130px; height: 58px; text-indent: -9999em; display: block; float: left; margin-right: 45px; border-right: 1px solid #3b3532; padding: 10px 45px 10px 0;}
 div#footer p{ color: #c5c4c3; float: left; width: 615px; font-size: 95%; margin-top: 12px;}
