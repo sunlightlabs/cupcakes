@@ -78,7 +78,9 @@ def tv_lookup(zipcode):
                 "location" : {"$within" : {"$center" : [center, radius]}}
             }).sort('channel').limit(20)
             
-            return res
+            return res or []
+            
+    return []
 
 # request lifecycle
 
@@ -125,10 +127,15 @@ def submit():
         cached to save on future geocoding calls.
     """
     
-    valid_tv_stations = ['other'] + [str(r['_id']) for r in tv_lookup(request.form.get('zipcode', None))]
+    valid_tv_stations = [('other', 'other')]
+    for r in tv_lookup(request.form.get('zipcode', None)):
+        name = '%s %s (%s)' % (r['network'], r['channel'], r['callsign'])
+        valid_tv_stations.append((str(r['_id']), name))
+    
+    print valid_tv_stations
     
     form = SubmissionForm(request.form)
-    form.tv_channel.choices = [(v, '%s %s (%s)' % (r['network'], r['channel'], r['callsign'])) for v in valid_tv_stations]
+    form.tv_channel.choices = valid_tv_stations
     
     if not form.referrer.data:
         form.referrer.data = session['referrer']
