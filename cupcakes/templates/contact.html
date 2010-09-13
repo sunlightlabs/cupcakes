@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block bodyclass %}contact{% endblock %}
+
+{% block content %}
+
+	<div id="ltColumn">
+		
+		{% with messages = get_flashed_messages() %}
+		  {% if messages %}
+		    <ul class=flashes>
+		    {% for message in messages %}
+		      <li>{{ message }}</li>
+		    {% endfor %}
+		    </ul>
+		  {% endif %}
+		{% endwith %}
+		
+		{% if form.errors %}
+		    <ul class="errors">
+		        {% for field in form.errors %}
+					<li>
+						{{ form[field].label }}
+						<ul>
+							{% for err in form[field].errors %}
+							<li>{{ err }}</li>
+							{% endfor %}
+						</ul>
+					</li>
+				{% endfor %}
+		    </ul>
+		{% endif %}
+		
+		<form action="/contact" method="post">
+			<ul>
+				<li>{{ form.name.label }} {{ form.name }}</li>
+				<li>{{ form.email.label }} {{ form.email }}</li>
+				<li>{{ form.comments.label }} {{ form.comments }}</li>
+			</ul>
+			<input type="submit">
+		</form>
+		
+	</div>
+	
+	<div id="rtColumn">
+	</div>    
+	
+{% endblock %}

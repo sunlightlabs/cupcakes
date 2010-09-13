@@ -1,5 +1,6 @@
 from cupcakes import settings
 from cupcakes.geo import YahooGeocoder
+from postmark import PMMail
 from wtforms import Form, validators, ValidationError
 from wtforms.fields import DateField, HiddenField, SelectField, TextField, TextAreaField
 from wtforms.widgets import TextInput
@@ -196,3 +197,18 @@ class FilterForm(Form):
     state = SelectField(u'State', choices=US_STATES)
     candidate = TextField(u'Candidate')
     sponsor = TextField(u'Sponsor')
+
+class ContactForm(Form):
+    name = TextField(u'Name', validators=[validators.Required()])
+    email = TextField(u'Email Address', validators=[validators.Required()])
+    comments = TextAreaField(u'Comments', validators=[validators.Required()])
+    
+    def send(self):
+        body = """%s <%s>\n\n%s""" % (self.name.data, self.email.data, self.comments.data)
+        PMMail(
+            api_key=settings.POSTMARK_KEY,
+            to='sunlightcam@sunlightfoundation.com',
+            sender='sunlightcam@sunlightfoundation.com',
+            subject='[SunlightCAM] contact form submission',
+            text_body=body,
+        ).send()

@@ -1,21 +1,18 @@
 from cStringIO import StringIO
 from cupcakes import settings
-from cupcakes.forms import SubmissionForm, FilterForm, US_STATES
+from cupcakes.forms import ContactForm, FilterForm, SubmissionForm, US_STATES
 from cupcakes.geo import YahooGeocoder
-from flask import Flask, Response, g, render_template, redirect, request, session, url_for
+from flask import Flask, Response, g, render_template, redirect, request, session, url_for, json
 from pymongo import Connection, DESCENDING, GEO2D
 from pymongo.objectid import ObjectId
 from urlparse import urlparse
 import csv
 import datetime
+import flask
 import math
 import pytz
 import re
 import urllib
-try:
-    import json
-except:
-    import simplejson as json
 
 app = Flask(__name__)
 
@@ -107,7 +104,6 @@ US_STATE_NAMES = [s[1].upper() for s in US_STATES]
 
 @app.route('/')
 def index():
-    
     """ The index with the submission form and recent submissions.
     """
     
@@ -118,7 +114,6 @@ def index():
 
 @app.route('/submit', methods=['POST'])
 def submit():
-    
     """ On post, save form. The form shows errors if validation fails.
         
         If the form is valid, a further step of geocoding is done.
@@ -131,8 +126,6 @@ def submit():
     for r in tv_lookup(request.form.get('zipcode', None)):
         name = '%s %s (%s)' % (r['network'], r['channel'], r['callsign'])
         valid_tv_stations.append((str(r['_id']), name))
-    
-    print valid_tv_stations
     
     form = SubmissionForm(request.form)
     form.tv_channel.choices = valid_tv_stations
@@ -365,7 +358,21 @@ def stations_tv():
             })
             
     return Response(json.dumps(stations), mimetype="application/json")
+
+@app.route('/contact', methods=['GET','POST'])
+def contact():
     
+    if request.method == 'POST':
+        form = ContactForm(request.form)
+        if form.validate():
+            form.send()
+            flask.flash("Thank you for contacting us. We'll get back to you shortly.")
+            return redirect(url_for('contact'))
+    else:
+        form = ContactForm()
+    
+    return render_template('contact.html', form=form)
+
 @app.route('/about', methods=['GET'])
 def about():
    return render_template('about.html')
