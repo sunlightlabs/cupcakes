@@ -172,7 +172,7 @@ def this_month():
 
 class SubmissionForm(Form):
     dt_month = SelectField(u'Month', default=this_month, choices=MONTHS, validators=[validators.Required()])
-    dt_day = SelectField(u'Day', default=this_day, choices=DAYS, validators=[DayValidator()])
+    dt_day = SelectField(u'Date Aired', default=this_day, choices=DAYS, validators=[DayValidator()])
     dt_year = HiddenField(u'Year', default='2010', validators=[validators.Required()])
     dt_time = SelectField(u'Time', default='12:00', choices=TIMES, validators=[validators.Required()])
     # date = DateField(u'Date', default=datetime.date.today, widget=DateInput(), validators=[validators.Required()])
