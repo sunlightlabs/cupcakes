@@ -110,6 +110,12 @@ fieldset.final { display: none; }
 fieldset.radio { display: none; }
 fieldset.television { display: none; }
 
+form#reportAd select#dt_month { width: 100px; }
+form#reportAd select#dt_day { width: 55px; }
+form#reportAd select#dt_time { width: 90px; }
+
+ul.errors { border-bottom: 1px dashed #9A9696; color: #900; margin-bottom: 20px; }
+
 table { width: 940px; }
 tr#titles th { text-transform: uppercase; color: #1b0500; font-weight: bold; padding: 0 15px 15px; font-size: 105%;}
 th.sort { background: url(../images/sortArrows.png) left 4px no-repeat; padding-left: 15px;}

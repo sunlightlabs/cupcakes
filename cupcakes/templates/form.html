@@ -2,7 +2,14 @@
 	{% if form.errors %}
 		<ul class="errors">
 			{% for field in form.errors %}
-				<li>{{ form[field].label }} - {{ form[field].errors }}</li>
+				<li>
+					{{ form[field].label }}
+					<ul>
+						{% for err in form[field].errors %}
+						<li>{{ err }}</li>
+						{% endfor %}
+					</ul>
+				</li>
 			{% endfor %}
 		</ul>
 	{% endif %}
@@ -48,12 +55,11 @@
 		</fieldset>
 		<ul>
 			<li>
-				{{ form.date.label }}
-				{{ form.date }}
-			</li>
-			<li>
-				{{ form.time.label }}
-				{{ form.time }}
+				<label>Date Aired</label>
+				{{ form.dt_month }}
+				{{ form.dt_day }}
+				{{ form.dt_year }}
+				{{ form.dt_time }}
 			</li>
 			<li>
 				{{ form.sponsor.label }}

@@ -5,6 +5,34 @@ from wtforms.fields import DateField, HiddenField, SelectField, TextField, TextA
 from wtforms.widgets import TextInput
 import datetime
 
+TIMES = []
+current = datetime.datetime(1981, 8, 6, 0, 0, 0)
+xv_minutes = datetime.timedelta(0, 0, 0, 0, 15)
+for i in range(0, 24 * 4):
+    TIMES.append((current.strftime("%H:%M"), current.strftime("%I:%M %p")))
+    current += xv_minutes
+
+DAYS = [(str(x), str(x)) for x in range(1, 32)]
+
+MONTHS = (
+    ("1","January"),
+    ("2","February"),
+    ("3","March"),
+    ("4","April"),
+    ("5","May"),
+    ("6","June"),
+    ("7","July"),
+    ("8","August"),
+    ("9","September"),
+    ("10","October"),
+    ("11","November"),
+    ("12","December"),
+)
+
+YEARS = (
+    ("2010", "2010"),
+)
+
 US_STATES = (
     ("", ""),
     ("AL", "Alabama"),
@@ -86,13 +114,6 @@ PROVIDERS = [(s, s) for s in (
     "Internet (Hulu, YouTube, etc.)",
 )]
 
-TIMES = []
-current = datetime.datetime(1981, 8, 6, 0, 0, 0)
-xv_minutes = datetime.timedelta(0, 0, 0, 0, 15)
-for i in range(0, 24 * 4):
-    TIMES.append((current.strftime("%H:%M"), current.strftime("%I:%M %p")))
-    current += xv_minutes
-
 FOR_AGAINST = (
     ('for', 'in favor of candidate'),
     ('against', 'against candidate'),
@@ -102,7 +123,7 @@ MEDIATYPES = [(c,c) for c in ('','radio','television')]
 
 geo = YahooGeocoder(settings.YAHOO_APPID)
 
-# date widget
+# date field and widgets
 
 class DateInput(TextInput):    
     def __call__(self, field, **kwargs):
@@ -131,11 +152,31 @@ class MediaTypeValidator(object):
         else:
             raise ValidationError(u'This field is required')
 
+class DayValidator(object):
+    def __call__(self, form, field):
+        day = int(field.data)
+        month = int(form.dt_month.data)
+        year = int(form.dt_year.data)
+        try:
+            datetime.date(year, month, day)
+        except ValueError:
+            raise ValidationError(u'%s has less than %s days' % (MONTHS[month - 1][1], day))
+
 # submission form
 
+def this_day():
+    return datetime.datetime.today().day
+
+def this_month():
+    return datetime.datetime.today().month
+
 class SubmissionForm(Form):
-    date = DateField(u'Date', default=datetime.date.today, widget=DateInput(), validators=[validators.Required()])
-    time = SelectField(u'Time', default='12:00', choices=TIMES, validators=[validators.Required()])
+    dt_month = SelectField(u'Month', default=this_month, choices=MONTHS, validators=[validators.Required()])
+    dt_day = SelectField(u'Day', default=this_day, choices=DAYS, validators=[DayValidator()])
+    dt_year = HiddenField(u'Year', default='2010', validators=[validators.Required()])
+    dt_time = SelectField(u'Time', default='12:00', choices=TIMES, validators=[validators.Required()])
+    # date = DateField(u'Date', default=datetime.date.today, widget=DateInput(), validators=[validators.Required()])
+    # time = SelectField(u'Time', default='12:00', choices=TIMES, validators=[validators.Required()])
     mediatype = SelectField(u'Media type', choices=MEDIATYPES, validators=[MediaTypeValidator()])
     for_against = SelectField(u'Type of ad', choices=FOR_AGAINST)
     radio_callsign = TextField(u'Radio station')

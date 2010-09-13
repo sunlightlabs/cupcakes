@@ -168,11 +168,17 @@ def submit():
         submission['timezone'] = location.get('timezone', None)
     
     # date conversion
-    d = submission['date']
-    (h, m) = (int(t) for t in submission['time'].split(":"))
-    submission['date_aired'] = datetime.datetime(d.year, d.month, d.day, h, m)
-    del submission['date']
-    del submission['time']
+    month = int(submission['dt_month'])
+    day = int(submission['dt_day'])
+    year = int(submission['dt_year'])
+    (hour, minute) = (int(t) for t in submission['dt_time'].split(":"))
+    
+    submission['date_aired'] = datetime.datetime(year, month, day, hour, minute)
+    
+    del submission['dt_month']
+    del submission['dt_day']
+    del submission['dt_year']
+    del submission['dt_time']
 
     # timezone conversion
     if 'timezone' in submission and submission['timezone']:
