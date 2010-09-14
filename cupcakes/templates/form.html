@@ -28,6 +28,19 @@
 	</fieldset>
 	<fieldset class="final">
 		<!-- <p>Please report the campaign ad aired on <span class="mediatype"></span> in <span class="zipcode"></span>.</p> -->
+		<fieldset class="television">
+			<ul>
+				<li>
+					{{ form.tv_provider.label }}
+					{{ form.tv_provider }}
+				</li>
+				<li id="tv_channel_container">
+					{{ form.tv_channel.label }}
+					{{ form.tv_channel }}
+					{{ form.tv_channel_other }}
+				</li>
+			</ul>
+		</fieldset>
 		<fieldset class="radio">
 			<ul>
 				<li>
@@ -36,20 +49,11 @@
 				</li>
 			</ul>
 		</fieldset>
-		<fieldset class="television">
+		<fieldset class="internet">
 			<ul>
 				<li>
-					{{ form.tv_provider.label }}
-					{{ form.tv_provider }}
-				</li>
-				<li id="internet_link_container">
 					{{ form.internet_link.label }}
 					{{ form.internet_link }}
-				</li>
-				<li id="tv_channel_container">
-					{{ form.tv_channel.label }}
-					{{ form.tv_channel }}
-					{{ form.tv_channel_other }}
 				</li>
 			</ul>
 		</fieldset>

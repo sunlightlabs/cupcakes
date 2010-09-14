@@ -28,11 +28,9 @@ def datetimeformat_filter(s):
     if mt == 'radio':
         return s.get('radio_callsign')
     elif mt == 'television':
-        prov = s.get('tv_provider', None)
-        if prov == "Internet (Hulu, YouTube, etc.)":
-            return prov
-        else:
-            return u"%s (%s)" % (s.get('tv_channel', None), prov)
+        return u"%s (%s)" % (s.get('tv_channel', ''), s.get('tv_provider', ''))
+    elif mt == 'internet':
+        return 'Internet'
     return u"unknown"
     
 # geo stuff
@@ -322,8 +320,8 @@ def download():
     """
     
     headers = ('timestamp', 'mediatype','for_against','radio_callsign',
-               'tv_provider','tv_channel', 'zipcode','candidate','sponsor',
-               'description','date_aired','city','state')
+               'tv_provider','tv_channel','internet_link','zipcode','candidate',
+               'sponsor','description','issue','date_aired','city','state')
     
     bffr = StringIO()
     writer = csv.writer(bffr)

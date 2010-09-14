@@ -112,7 +112,6 @@ PROVIDERS = [(s, s) for s in (
     "other cable",
     "other satellite",
     "Broadcast (antenna)",
-    "Internet (Hulu, YouTube, etc.)",
 )]
 
 FOR_AGAINST = (
@@ -120,7 +119,13 @@ FOR_AGAINST = (
     ('against', 'against candidate'),
     ('neither', 'neither'),
 )
-MEDIATYPES = [(c,c) for c in ('','radio','television')]
+
+MEDIATYPES = (
+    ('', ''),
+    ('television', 'Television'),
+    ('radio', 'Radio'),
+    ('internet', 'Internet (Hulu, YouTube, etc.)'),
+)
 
 geo = YahooGeocoder(settings.YAHOO_APPID)
 
@@ -144,12 +149,15 @@ class MediaTypeValidator(object):
         self.radio_callsign_validator = CallsignValidator()
         self.tv_provider_validator = validators.Required()
         self.tv_channel_validator = validators.Required()
+        self.internet_link_validator = validators.Required()
     def __call__(self, form, field):
         if field.data == 'radio':
             self.radio_callsign_validator(form, form.radio_callsign)
         elif field.data == 'television':
             self.tv_provider_validator(form, form.tv_provider)
             self.tv_channel_validator(form, form.tv_channel)
+        elif field.data == 'internet':
+            self.internet_link_validator(form, form.internet_link)
         else:
             raise ValidationError(u'This field is required')
 
