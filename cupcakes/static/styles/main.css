@@ -35,7 +35,7 @@ form#searchForm input { float: left;}
 
 input, textarea { background: #f1f1f1 url(../images/bg_input.png) bottom left repeat-x; border: 1px solid #b2b2b2; -moz-border-radius: 3px; -webkit-border-radius: 3px; padding: 5px 10px; color: #706a67; }
 input:focus, textarea:focus { background: #f6f6f6 url(../images/bg_input.png) bottom left repeat-x; border: 1px solid #9f9e9e; }
-input, textarea, select { text-transform: capitalize; }
+select { text-transform: capitalize; }
 input#id_search { background: url(../images/bg_search.png) top left no-repeat; width: 183px; height: 22px; border: none; margin-right: 10px; color: #a19995; font-size: 110%; font-family: Georgia, "Times New Roman", Times, serif;}
 
 input#tv_channel_other { display: none; margin-top: 15px; }
@@ -115,6 +115,8 @@ form#reportAd select#dt_day { width: 55px; }
 form#reportAd select#dt_time { width: 90px; }
 
 ul.errors { border-bottom: 1px dashed #9A9696; color: #900; margin-bottom: 20px; }
+
+#ads .embed input { display: none; }
 
 table { width: 940px; }
 tr#titles th { text-transform: uppercase; color: #1b0500; font-weight: bold; padding: 0 15px 15px; font-size: 105%;}

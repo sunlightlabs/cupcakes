@@ -11,19 +11,42 @@
 		    <li>
                 <h3>728x90</h3>
                 <img alt="728x90 ad" src="static/images/cam_728x90.jpg" />
+				<span class="embed">
+					<a href="http://assets.sunlightfoundation.com/sunlightcam/ads/cam_728x90.jpg">Get embed code</a>
+					<input type="text" value="" />
+				</span>
             </li>
             <li class="clear">
                 <h3>160x600</h3>
                 <img alt="160x600 ad" src="static/images/cam_160x600_2.jpg" />
+				<span class="embed">
+					<a href="http://assets.sunlightfoundation.com/sunlightcam/ads/cam_160x600_2.jpg">Get embed code</a>
+					<input type="text" value="" />
+				</span>
             </li>
             <li>
                 <h3>300x250</h3>
                 <img alt="300x250 ad" src="static/images/cam_300x250.jpg" />
+				<span class="embed">
+					<a href="http://assets.sunlightfoundation.com/sunlightcam/ads/cam_300x250.jpg">Get embed code</a>
+					<input type="text" value="" />
+				</span>
             </li>
         </ul>
 	
 {% endblock %}
 
 {% block scripts %}
-	<script src="/static/scripts/form.js"></script>
+	<script type="text/javascript">
+		$('#ads span.embed a').click(function() {
+			$(this).hide().siblings('input').show().val(
+				'<a href="http://sunlightcam.com"><img src="' + this.href + '" alt="Sunlight CAM" /></a>'
+			);
+			return false;
+		});
+		$('#ads span.embed input').click(function() {
+			this.select();
+			return false;
+		});
+	</script>
 {% endblock %}

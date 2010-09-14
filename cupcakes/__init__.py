@@ -170,6 +170,8 @@ def submit():
     del submission['dt_day']
     del submission['dt_year']
     del submission['dt_time']
+    
+    submission['flag'] = False
 
     # timezone conversion
     if 'timezone' in submission and submission['timezone']:
