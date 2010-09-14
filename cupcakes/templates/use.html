@@ -38,15 +38,17 @@
 
 {% block scripts %}
 	<script type="text/javascript">
-		$('#ads span.embed a').click(function() {
-			$(this).hide().siblings('input').show().val(
-				'<a href="http://sunlightcam.com"><img src="' + this.href + '" alt="Sunlight CAM" /></a>'
-			);
-			return false;
-		});
-		$('#ads span.embed input').click(function() {
-			this.select();
-			return false;
-		});
+		$().ready(function() { 
+			$('#ads span.embed a').click(function() {
+				$(this).hide().siblings('input').show().val(
+					'<a href="http://sunlightcam.com"><img src="' + this.href + '" alt="Sunlight CAM" /></a>'
+				);
+				return false;
+			});
+			$('#ads span.embed input').click(function() {
+				this.select();
+				return false;
+			});
+		};
 	</script>
 {% endblock %}

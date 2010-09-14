@@ -130,6 +130,9 @@ td.for, td.against { text-indent: -9999em; }
 td.for { background: url(../images/icon_for.png) center center no-repeat; }
 td.against { background: url(../images/icon_against.png) center center no-repeat; }
 
+tr.flagged { color: #900; }
+tr.removed { color: #ddd; }
+
 #tableNav { margin-top: 35px; padding-top: 10px; border-top: 1px solid #f0ede7; display: block;}
 #previous { float: left;}
 #nextWrapper { text-align: right;}

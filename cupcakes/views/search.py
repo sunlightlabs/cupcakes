@@ -33,27 +33,34 @@ def browse():
     page = int(request.args.get('page', 1))
     limit = settings.PAGE_SIZE
     offset = limit * (page - 1)
+    
+    flagged = False
 
     # build filter spec and description phrase
     
-    spec = {}
+    spec = {'removed': {'$ne': True}}
     qdesc_phrases = []
     
     if 'q' in request.args and request.args['q']:
     
         regex = re.compile(request.args['q'], re.I)
-    
+        
         spec['$or'] = [
             {'candidate': regex},
             {'sponsor': regex},
         ]
-        qdesc_phrases.append('related to &#8220;%s&#8221;' % request.args['q'])
         
+        qdesc_phrases.append('related to &#8220;%s&#8221;' % request.args['q'])
+    
+    elif 'flagged' in request.args:    
+
+        spec['flagged'] = True
+        flagged = True
+    
     else:
         
-        if 'flagged' in request.args:
-            spec['flagged'] = True
-            
+        spec
+
         if 'candidate' in request.args and request.args['candidate']:
             spec['candidate'] = re.compile(request.args['candidate'], re.I)
             qdesc_phrases.append('about &#8220;%s&#8221;' % request.args['candidate'])
@@ -110,6 +117,7 @@ def browse():
                            form=form,
                            submissions=submissions,
                            pager=pager,
+                           flagged=flagged,
                            qdesc=' '.join(qdesc_phrases),
                            qs=urllib.urlencode(params))
 
@@ -143,7 +151,7 @@ def download():
     """ Download all submissions as CSV.
     """
     
-    headers = ('timestamp', 'mediatype','for_against','radio_callsign',
+    headers = ('flagged','timestamp', 'mediatype','for_against','radio_callsign',
                'tv_provider','tv_channel','internet_link','zipcode','candidate',
                'sponsor','description','issue','date_aired','city','state')
     
@@ -151,7 +159,7 @@ def download():
     writer = csv.writer(bffr)
     writer.writerow(headers)
     
-    for d in g.db.submissions.find():
+    for d in g.db.submissions.find({'removed': {'$ne': True}}):
         row = [d.get(key, '') for key in headers]
         writer.writerow(row)
     

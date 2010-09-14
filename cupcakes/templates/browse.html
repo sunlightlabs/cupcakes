@@ -8,31 +8,40 @@
 		{% if qdesc %}
 			<h2 class="withAsset">Find ads <span id="searchResult">{{ qdesc|safe }}</span></h2>
 		{% else %}
-			<h2 class="withAsset">Browse submissions</h2>
+			{% if flagged %}
+				<h2 class="withAsset">Flagged submissions</h2>
+			{% else %}
+				<h2 class="withAsset">Browse submissions</h2>
+			{% endif %}
 		{% endif %}
 		
-		<a id="downloadLink" href="/download">Download all as CSV</a>
-		<div class="clear"></div>
-		<div id="filter">
-			<span id="filterInstructions">Not seeing the results you’re after, revise your search below</span>
-			<form action="/browse" method="get">
-				<ul>
-					{% for field in form %}
-						<li>
-							{{ field.label }}
-							{{ field }}
-						</li>
-					{% endfor %}
-					<li>
-						<button class="filterBtn" type="submit">
-							<span>Filter</span>
-						</button>
-					</li>
-				</ul>
-			</form>
+		{% if not flagged %}
+
+			<a id="downloadLink" href="/download">Download all as CSV</a>
 			<div class="clear"></div>
-			<a id="clearFilters" href="/browse#filter">clear filters</a>
-		</div>
+		
+			<div id="filter">
+				<span id="filterInstructions">Not seeing the results you’re after, revise your search below</span>
+				<form action="/browse" method="get">
+					<ul>
+						{% for field in form %}
+							<li>
+								{{ field.label }}
+								{{ field }}
+							</li>
+						{% endfor %}
+						<li>
+							<button class="filterBtn" type="submit">
+								<span>Filter</span>
+							</button>
+						</li>
+					</ul>
+				</form>
+				<div class="clear"></div>
+				<a id="clearFilters" href="/browse#filter">clear filters</a>
+			</div>
+		
+		{% endif %}
 	
 		{% if pager.total == 0 %}
 			<p>Sorry, no submissions match your filter criteria.</p>
@@ -50,11 +59,12 @@
 						<th class="sort">Candidate</th>
 						<th>Issue</th>
 						<th>Description</th>
+						<th>Flag</th>
 					</tr>
 				</thead>
 				<tbody>
 					{% for s in submissions %}
-						<tr class="{{ loop.cycle('even', 'odd') }} {{ s.mediatype }}">
+						<tr class="{{ loop.cycle('even', 'odd') }} {{ s.mediatype }}{% if s.flagged %} flagged{% endif %}">
 							<td class="zipcode">{{ s.zipcode }}</td>
 							<td class="state">{{ s.state }}</td>
 							<td class="date_aired" title="{{ s.date_aired }}">{{ s.date_aired|datetimeformat }}</td>
@@ -66,6 +76,14 @@
 							<td class="candidate">{{ s.candidate }}</td>
 							<td class="issue">{{ s.issue }}</td>
 							<td class="description">{{ s.description }}</td>
+							{% if flagged %}
+								<td class="flag">
+									<a href="#" data-id="{{ s._id }}" class="ok">ok</a>
+									<a href="#" data-id="{{ s._id }}" class="remove">remove</a>
+								</td>
+							{% else %}
+								<td class="flag"><a href="#" data-id="{{ s._id }}" class="flag">flag</a></td>
+							{% endif %}
 						</tr>
 					{% endfor %}
 				<tbody>
@@ -128,7 +146,34 @@
 					var title = $(node).attr('title');
 					return title ? title : node.innerHTML;
 				}
-			}); 
+			});
+			{% if flagged %}
+				$("a.remove").click(function(){
+					var a = $(this);
+					var sid = a.attr('data-id');
+					$.post('/flag?remove', { submission: sid }, function() {
+						a.parent().parent().addClass('removed');
+					});
+					return false;
+				});
+				$("a.ok").click(function() {
+					var a = $(this);
+					var sid = a.attr('data-id');
+					$.post('/flag?ok', { submission: sid }, function() {
+						a.parent().parent().removeClass('flagged');
+					});
+					return false;
+				});
+			{% else %}
+				$("a.flag").click(function() {
+					var a = $(this);
+					var sid = a.attr('data-id');
+					$.post('/flag', { submission: sid }, function() {
+						a.parent().parent().addClass('flagged');
+					});
+					return false;
+				});
+			{% endif %}
 		});
 	</script>
 {% endblock %}

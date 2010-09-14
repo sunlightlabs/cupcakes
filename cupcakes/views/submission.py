@@ -1,14 +1,32 @@
 from cupcakes import settings
-from cupcakes.data import RECENT_SORT
+from cupcakes.data import RECENT_SORT, submission_lookup, tv_lookup
 from cupcakes.forms import SubmissionForm
-from flask import Module, g, redirect, render_template, request, session, url_for
-from pymongo.objectid import ObjectId
+from flask import Module, Response, g, redirect, render_template, request, session, url_for
 from urlparse import urlparse
 import datetime
 import pytz
 
 submission = Module(__name__)
 
+@submission.route('/flag', methods=['POST'])
+def flag():
+    
+    sid = request.form.get('submission', None)
+    
+    if sid:
+        submission = submission_lookup(sid)
+        if 'ok' in request.args:
+            submission['flagged'] = False
+            submission['removed'] = False
+        elif 'remove' in request.args:
+            submission['flagged'] = True
+            submission['removed'] = True
+        else:
+            submission['flagged'] = True
+        g.db.submissions.save(submission)
+        
+    return Response("{}", mimetype="application/json")
+        
 @submission.route('/submit', methods=['POST'])
 def submit():
     """ On post, save form. The form shows errors if validation fails.
@@ -41,7 +59,7 @@ def submit():
         if submission['tv_channel_other']:
             submission['tv_channel'] = submission['tv_channel_other']
     else:
-        channel = g.db.tvstations.find_one({u'_id': ObjectId(submission['tv_channel'])})
+        channel = tv_lookup(submission['tv_channel'])
         if channel:
             submission['tv_channel'] = '%s %s %s' % (channel['callsign'], channel['network'], channel['channel'])
         else:
