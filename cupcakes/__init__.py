@@ -107,7 +107,7 @@ def index():
     
     form = SubmissionForm(request.form)
     form.referrer.data = session.get('referrer', '')
-    recent = g.db.submissions.find().sort(RECENT_SORT).limit(3)
+    recent = g.db.submissions.find().sort(RECENT_SORT).limit(2)
     return render_template('index.html', form=form, recent=recent)
 
 @app.route('/submit', methods=['POST'])
