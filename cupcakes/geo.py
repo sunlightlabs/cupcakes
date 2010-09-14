@@ -1,3 +1,4 @@
+from flask import g
 import urllib
 import urllib2
 try:
@@ -39,3 +40,16 @@ class YahooGeocoder(object):
                     loc['longitude'] = float(loc['longitude'])
         
                     return loc
+
+    def zipcode_lookup(zipcode):
+        lookup = g.db.geo.find_one({'zipcode': zipcode})
+        if lookup:
+            location = lookup['geo']
+        else:
+            location = self.lookup(q=zipcode)
+            if location:
+                g.db.geo.save({
+                    'zipcode': zipcode,
+                    'geo': location,
+                })
+        return location
