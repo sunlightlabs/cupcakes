@@ -44,11 +44,11 @@ input#id_search { background: url(../images/bg_search.png) top left no-repeat; w
 
 input#tv_channel_other { display: none; margin-top: 15px; }
 
-div#feature { margin-top: 105px;}
+div#feature { margin-top: 100px;}
 div#pageMain { width: 960px; margin: 0 auto; padding: 40px 10px;}
 body.home div#pageMain { padding: 0;}
 
-#feature p { margin: 0 auto 25px; background: url(../images/feature_text.png) top center no-repeat; width: 573px; height: 109px; text-indent: -9999em; display: block; }
+#feature p { margin: 0 auto 25px; background: url(../images/feature_text.png) top center no-repeat; width: 514px; height: 97px; text-indent: -9999em; display: block; }
 #feature dl { text-indent: -9999em; display: block; width: 880px; height: 74px; background: url(../images/feature_list.png) top center no-repeat;}
 
 body.home div#ltColumn { background: url(../images/ltColumn_home.jpg) top left no-repeat; width: 470px; min-height: 254px; margin-top: -81px; padding: 40px 35px 0px; margin-right: 20px;}
