@@ -19,8 +19,8 @@ body{
     font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
 }
 
-body.home div#headerWrapper { background: url(../images/bg_wrapperHome.jpg) top center repeat-x; height: 498px;}
-body.home div#header { background: url(../images/bg_home.jpg) top center no-repeat; height: 498px;}
+body.home div#headerWrapper { background: url(../images/bg_wrapperHome_2.jpg) top center repeat-x; height: 524px;}
+body.home div#header { background: url(../images/bg_home_2.jpg) top center no-repeat; height: 524px;}
 div#header { width: 940px; margin: 0 auto; padding: 0 10px; background: url(../images/bg.jpg) top center no-repeat; height: 189px;}
 div#headerWrapper { background: url(../images/bg_wrapper.jpg) top center repeat-x; height: 189px;}
 
@@ -44,9 +44,12 @@ input#id_search { background: url(../images/bg_search.png) top left no-repeat; w
 
 input#tv_channel_other { display: none; margin-top: 15px; }
 
-div#feature { background: url(../images/feature_text.png) top center no-repeat; width: 573px; height: 109px; text-indent: -9999em; display: block; margin: 140px auto;}
+div#feature { margin-top: 105px;}
 div#pageMain { width: 960px; margin: 0 auto; padding: 40px 10px;}
 body.home div#pageMain { padding: 0;}
+
+#feature p { margin: 0 auto 25px; background: url(../images/feature_text.png) top center no-repeat; width: 573px; height: 109px; text-indent: -9999em; display: block; }
+#feature dl { text-indent: -9999em; display: block; width: 880px; height: 74px; background: url(../images/feature_list.png) top center no-repeat;}
 
 body.home div#ltColumn { background: url(../images/ltColumn_home.jpg) top left no-repeat; width: 470px; min-height: 254px; margin-top: -81px; padding: 40px 35px 0px; margin-right: 20px;}
 body.home div#rtColumn { padding-top: 40px; width: 360px;}
