@@ -41,7 +41,7 @@
 
 {% block scripts %}
 	<script type="text/javascript">
-		$().ready(function() { 
+		$().ready(function() {
 			$('#ads span.embed a').click(function() {
 				$(this).hide().siblings('input').show().val(
 					'<a href="http://sunlightcam.com"><img src="' + this.href + '" alt="Sunlight CAM" /></a>'
@@ -52,6 +52,6 @@
 				this.select();
 				return false;
 			});
-		};
+		});
 	</script>
 {% endblock %}

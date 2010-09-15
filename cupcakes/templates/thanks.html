@@ -12,13 +12,27 @@
 			{% else %}
 				<p><a href="/browse">Browse submissions</a> or submit another ad.</p>
 			{% endif %}
-			<h3>Like Sunlight CAM? Sign up here to hear about other Sunlight projects.</h3>
-			<form action="/" method="post">
-                <input id="id_signup" type="text" value="Enter Your Email Address" name="q"/>
+			
+			
+			<h3>Share Sunlight CAM</h3>
+			<ul class="share">
+				<li>
+					<a href="http://twitter.com/share" class="twitter-share-button" data-url="http://sunlightcam.com" data-text="Follow the money this #election season. Join me as a Sunlight Campaign Ad Monitor." data-count="vertical" data-via="sunfoundation">Tweet</a>
+					<script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
+				</li>
+				<li>
+					<iframe src="http://www.facebook.com/plugins/like.php?href=http%3A%2F%2Fsunlightcam.com&amp;layout=button_count&amp;show_faces=true&amp;width=350&amp;action=like&amp;font=lucida+grande&amp;colorscheme=light&amp;height=21" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:21px;" allowTransparency="true"></iframe>
+				</li>
+			</ul>
+			
+			<h3>Like Sunlight CAM? Sign up to hear about other Sunlight projects.</h3>
+			<form action="/" method="post" id="signup_form">
+                <input id="id_signup" type="text" placeholder="Enter your email address" name="email"/>
     			<button class="signupBtn" type="submit">
     				<span>Sign Up</span>
     			</button>
             </form>
+			<p id="signup_message"></p>
 		</div>
 	</div>
 	
@@ -31,4 +45,8 @@
 
 {% block scripts %}
 	<script src="/static/scripts/form.js"></script>
+	<script type="text/javascript">
+		$().ready(function() {
+		});
+	</script>
 {% endblock %}

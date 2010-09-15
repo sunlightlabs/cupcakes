@@ -131,7 +131,7 @@ form#reportAd select#dt_time { width: 90px; }
 
 ul.errors { border-bottom: 1px dashed #9A9696; color: #900; margin-bottom: 20px; }
 
-#ads .embed input { display: none; }
+#ads .embed input { display: none; width: 200px; }
 .embed { float: left;}
 
 table { width: 940px; }
@@ -165,11 +165,14 @@ tr.flagged a.flag { background: url(../images/icon_flag.png) top left no-repeat;
 #clearFilters { margin-top: 10px; display: block;}
 
 #options strong{ border: 1px solid #ba8b83; background-color: #edd7d2; -moz-border-radius: 3px; -webkit-border-radius: 3px; padding: 10px; display: block;}
-
+#options h3 { clear: both; }
 strong { font-weight: bold;}
 p { margin-bottom: 1em;}
 
 ul#ads li { float: left; margin: 0 50px 30px 0;}
+
+ul.share { margin: 0 20px 0 0; }
+ul.share li { float: left; padding: 0 10px 40px 0; }
 
 #navWrapper { background-color: #1d1915; border-bottom: 1px solid #21201d;}
 #nav { background-color: #1d1915; height: 30px; margin: 0 auto; width: 940px; padding: 0 10px; font-size: 95%; }

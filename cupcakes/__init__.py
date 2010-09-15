@@ -7,6 +7,8 @@ from cupcakes.views.submission import submission
 from flask import Flask, Response, g, json, render_template, redirect, request, session, url_for
 from pymongo import Connection, GEO2D
 import flask
+import urllib
+import urllib2
 
 app = Flask(__name__)
 app.register_module(search)
@@ -91,6 +93,22 @@ def contact():
         form = ContactForm()
     
     return render_template('contact.html', form=form)
+
+@app.route('/subscribe', methods=['POST'])
+def subscribe():
+    
+    email = request.form.get('email', None)
+    data = {"message": "Something terrible happened. Please reload the page and try again."}
+    
+    if email:
+        
+        bsd_url = "http://bsd.sunlightfoundation.com/page/s/sfc"
+        response = urllib2.urlopen(bsd_url, urllib.urlencode({"email": email})).read()
+
+        if "Success" in response:
+            data["message"] = "Thanks for signing up!"
+            
+    return Response(json.dumps(data), mimetype="application/json")
 
 @app.route('/about', methods=['GET'])
 def about():
