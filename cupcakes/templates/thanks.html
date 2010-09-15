@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block bodyclass %}about{% endblock %}
+{% block bodyclass %}thanks{% endblock %}
 
 {% block content %}
 
@@ -12,6 +12,13 @@
 			{% else %}
 				<p><a href="/browse">Browse submissions</a> or submit another ad.</p>
 			{% endif %}
+			<h3>Like Sunlight CAM? Sign up here to hear about other Sunlight projects.</h3>
+			<form action="/" method="post">
+                <input id="id_signup" type="text" value="Enter Your Email Address" name="q"/>
+    			<button class="signupBtn" type="submit">
+    				<span>Sign Up</span>
+    			</button>
+            </form>
 		</div>
 	</div>
 	

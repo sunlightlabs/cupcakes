@@ -41,7 +41,7 @@ class YahooGeocoder(object):
         
                     return loc
 
-    def zipcode_lookup(zipcode):
+    def zipcode_lookup(self, zipcode):
         lookup = g.db.geo.find_one({'zipcode': zipcode})
         if lookup:
             location = lookup['geo']
