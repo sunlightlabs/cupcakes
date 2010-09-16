@@ -76,14 +76,18 @@
 							<td class="candidate">{{ s.candidate }}</td>
 							<td class="issue">{{ s.issue }}</td>
 							<td class="description">{{ s.description }}</td>
-							{% if flagged %}
-								<td class="flag">
+							<td class="flag">
+								{% if flagged %}
 									<a href="#" data-id="{{ s._id }}" class="ok">ok</a>
 									<a href="#" data-id="{{ s._id }}" class="remove">remove</a>
-								</td>
-							{% else %}
-								<td class="flag"><a href="#" data-id="{{ s._id }}" class="flag">flag</a></td>
-							{% endif %}
+								{% else %}
+									{% if s.approved %}
+										&nbsp;
+									{% else %}
+										<a href="#" data-id="{{ s._id }}" class="flag">flag</a>
+									{% endif %}
+								{% endif %}
+							</td>
 						</tr>
 					{% endfor %}
 				<tbody>
@@ -166,11 +170,14 @@
 				});
 			{% else %}
 				$("a.flag").click(function() {
-					var a = $(this);
-					var sid = a.attr('data-id');
-					$.post('/flag', { submission: sid }, function() {
-						a.parent().parent().addClass('flagged');
-					});
+					var msg = "Flagging an item for review will cause our reporters to do some serious verification work. Are you sure you want to flag this submission?";
+					if (confirm(msg)) {
+						var a = $(this);
+						var sid = a.attr('data-id');
+						$.post('/flag', { submission: sid }, function() {
+							a.parent().parent().addClass('flagged');
+						});
+					}
 					return false;
 				});
 			{% endif %}

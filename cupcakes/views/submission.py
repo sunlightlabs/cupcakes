@@ -18,10 +18,12 @@ def flag():
         if 'ok' in request.args:
             submission['flagged'] = False
             submission['removed'] = False
+            submission['approved'] = True
         elif 'remove' in request.args:
             submission['flagged'] = True
             submission['removed'] = True
-        else:
+            submission['approved'] = False
+        elif not submission.get('approved', False):
             submission['flagged'] = True
         g.db.submissions.save(submission)
         
