@@ -5,51 +5,58 @@
 {% block content %}
 
 	<div id="ltColumn">
+		
 	    <h2>Contact Us</h2>
-		<p>Have a question or comment about the site? Submit it below.</p>
-		<p>If you need help or want more information about Sunlight CAM, please also contact us using the form below.</p>
-		
+	
 		{% with messages = get_flashed_messages() %}
-		  {% if messages %}
-		    <ul class=flashes>
-		    {% for message in messages %}
-		      <li>{{ message }}</li>
-		    {% endfor %}
-		    </ul>
-		  {% endif %}
+		
+			{% if messages %}
+			
+				<ul class=flashes>
+					{% for message in messages %}
+						<li>{{ message }}</li>
+					{% endfor %}
+				</ul>
+				
+			{% else %}
+			
+				<p>Have a question or comment about the site? Submit it below.</p>
+				<p>If you need help or want more information about Sunlight CAM, please also contact us using the form below.</p>
+
+				{% if form.errors %}
+				    <ul class="errors">
+				        {% for field in form.errors %}
+							<li>
+								{{ form[field].label }}
+								<ul>
+									{% for err in form[field].errors %}
+									<li>{{ err }}</li>
+									{% endfor %}
+								</ul>
+							</li>
+						{% endfor %}
+				    </ul>
+				{% endif %}
+
+				<form action="/contact" id="contact" method="post">
+					<ul>
+						<li>{{ form.name.label }} {{ form.name }}</li>
+						<li>{{ form.email.label }} {{ form.email }}</li>
+						<li>{{ form.comments.label }} {{ form.comments }}</li>
+						<li>
+						    <button class="submitBtn" type="submit">
+								<span>Submit</span>
+							</button>
+						</li>
+					</ul>
+				</form>
+			
+			{% endif %}
+
 		{% endwith %}
-		
-		{% if form.errors %}
-		    <ul class="errors">
-		        {% for field in form.errors %}
-					<li>
-						{{ form[field].label }}
-						<ul>
-							{% for err in form[field].errors %}
-							<li>{{ err }}</li>
-							{% endfor %}
-						</ul>
-					</li>
-				{% endfor %}
-		    </ul>
-		{% endif %}
-		
-		<form action="/contact" id="contact" method="post">
-			<ul>
-				<li>{{ form.name.label }} {{ form.name }}</li>
-				<li>{{ form.email.label }} {{ form.email }}</li>
-				<li>{{ form.comments.label }} {{ form.comments }}</li>
-				<li>
-				    <button class="submitBtn" type="submit">
-						<span>Submit</span>
-					</button>
-				</li>
-			</ul>
-		</form>
 		
 	</div>
 	
-	<div id="rtColumn">
-	</div>    
+	<div id="rtColumn"></div>    
 	
 {% endblock %}
