@@ -32,8 +32,8 @@ form#searchForm { float: right; padding-top: 32px;}
 form#searchForm input { float: left;}
 
 #brandingbar input { padding: 3px;}
-body.home #brandingbar, body.about #brandingbar, body.description #brandingbar, body.contact #brandingbar, body.share #brandingbar, body.thanks #brandingbar { padding: 3px 0 5px;}
-body.home #brandingbar a#sllink, body.about #brandingbar a#sllink, body.description #brandingbar a#sllink, body.contact #brandingbar a#sllink, body.share #brandingbar a#sllink, body.thanks #brandingbar a#sllink { margin-top: 3px;}
+body.home #brandingbar, body.about #brandingbar, body.description #brandingbar, body.contact #brandingbar, body.share #brandingbar, body.usingthedata #brandingbar, body.thanks #brandingbar { padding: 3px 0 5px;}
+body.home #brandingbar a#sllink, body.about #brandingbar a#sllink, body.description #brandingbar a#sllink, body.contact #brandingbar a#sllink, body.share #brandingbar a#sllink, body.usingthedata #brandingbar a#sllink, body.thanks #brandingbar a#sllink { margin-top: 3px;}
 
 .tip { font-family: Georgia, "Times New Roman", Times, serif; margin-bottom: 30px; font-style: oblique; display: block;}
 
@@ -174,13 +174,27 @@ ul#ads li { float: left; margin: 0 50px 30px 0;}
 ul.share { margin: 0 20px 0 0; }
 ul.share li { float: left; padding: 0 10px 40px 0; }
 
+.methodology ol {
+	margin: 15px 0 15px 50px;
+	list-style: decimal outside none;
+}
+
+.methodology ul {
+	margin: 15px 0 15px 50px;
+	list-style: disc outside none;
+}
+
+.methodology li {
+	margin: 15px 0;
+}
+
 #navWrapper { background-color: #1d1915; border-bottom: 1px solid #21201d;}
 #nav { background-color: #1d1915; height: 30px; margin: 0 auto; width: 940px; padding: 0 10px; font-size: 95%; }
 #nav ul { float: right; }
 #nav li { float: left; margin-top: 8px;}
 #nav li a { text-decoration: none; color: #bbb9b7; text-decoration: underline; text-transform: uppercase; display: block; line-height: 15px;}
 #nav li a:hover { color: #8d1d1b;}
-#nav li#about, #nav li#share { margin-right: 40px; padding-right: 40px; border-right: 1px solid #3b3a36;}
+#nav li#about, #nav li#share, #nav li#usingthedata { margin-right: 40px; padding-right: 40px; border-right: 1px solid #3b3a36;}
 
 div#footer { background: url(../images/footer.jpg) top center no-repeat; height: 81px; padding: 30px 60px 0px; margin-bottom: 40px; margin-top: 70px;}
 div#footer a { color: #c5c4c3;}

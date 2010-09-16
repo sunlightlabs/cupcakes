@@ -112,8 +112,12 @@ def subscribe():
 
 @app.route('/about', methods=['GET'])
 def about():
-   return render_template('about.html')
+    return render_template('about.html')
    
-@app.route('/use', methods=['GET'])
-def use():
-  return render_template('use.html')
+@app.route('/share', methods=['GET'])
+def share():
+    return render_template('use.html')
+  
+@app.route('/usingthedata', methods=['GET'])
+def usingthedata():
+    return render_template('usingthedata.html')
