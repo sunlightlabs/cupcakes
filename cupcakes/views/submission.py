@@ -2,6 +2,7 @@ from cupcakes import settings
 from cupcakes.data import RECENT_SORT, submission_lookup, tv_lookup
 from cupcakes.forms import SubmissionForm
 from flask import Module, Response, g, redirect, render_template, request, session, url_for
+from postmark import PMMail
 from urlparse import urlparse
 import datetime
 import pytz
@@ -25,6 +26,18 @@ def flag():
             submission['approved'] = False
         elif not submission.get('approved', False):
             submission['flagged'] = True
+            
+            body = """http://sunlightcam.com/browse?flagged\n\n"""
+            body += "\n".join("%s: %s" % (k, submission[k]) for k in sorted(submission.keys()))
+            
+            PMMail(
+                api_key=settings.POSTMARK_KEY,
+                to='lyoung@sunlightfoundation.com',
+                sender='sunlightcam@sunlightfoundation.com',
+                subject='[SunlightCAM] new flagged submission',
+                text_body=body,
+            ).send()
+            
         g.db.submissions.save(submission)
         
     return Response("{}", mimetype="application/json")
