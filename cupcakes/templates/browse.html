@@ -75,7 +75,7 @@
 							</td>
 							<td class="candidate">{{ s.candidate }}</td>
 							<td class="issue">{{ s.issue }}</td>
-							<td class="description">{{ s.description }}</td>
+							<td class="description">{{ s.description|truncate(255) }}</td>
 							<td class="flag">
 								{% if flagged %}
 									<a href="#" data-id="{{ s._id }}" class="ok">ok</a>
