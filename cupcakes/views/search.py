@@ -160,6 +160,14 @@ def download():
     writer.writerow(headers)
     
     for d in g.db.submissions.find({'removed': {'$ne': True}}):
+        mt = d.get('mediatype')
+        if mt != 'television':
+            d['tv_provider'] = ''
+            d['tv_channel'] = ''
+        if mt != 'radio':
+            d['radio_callsign'] = ''
+        if mt != 'internet':
+            d['internet_link'] = ''
         row = [d.get(key, '') for key in headers]
         writer.writerow(row)
     
